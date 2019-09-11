@@ -12,9 +12,7 @@ properties:
     type: string
     description: 生成过程时长
   steps:
-    type:
-      - string
-      - array
+    type: array
     description: 生成过程每一步耗时
     items:
       type: object
