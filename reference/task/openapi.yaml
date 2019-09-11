@@ -83,6 +83,12 @@ paths:
               schema:
                 $ref: ../common/models/error.v1.yaml
       description: 重新生成视频. 请在更新了summary后者timeline之后重新生成视频.
+    delete:
+      summary: 终止任务
+      responses:
+        '200':
+          description: OK
+      description: 终止任务.
   '/task/{task_id}/summary':
     parameters:
       - type: string
