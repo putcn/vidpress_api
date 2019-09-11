@@ -2,13 +2,12 @@ openapi: 3.0.0
 info:
   title: task
   version: '1.0'
-  description: Task api
-servers:
-  - url: 'http://localhost:3000'
+  description: 视频生成任务API
+servers: []
 paths:
   /task:
     get:
-      summary: Your GET endpoint
+      summary: 获取任务列表
       tags: []
       responses:
         '200':
@@ -21,7 +20,7 @@ paths:
                   $ref: ../common/models/task.v1.yaml
       description: 返回任务列表.
     post:
-      summary: ''
+      summary: 创建视频生成任务
       responses:
         '200':
           description: 任务创建成功
@@ -52,7 +51,7 @@ paths:
           type: number
         description: task id
     get:
-      summary: Your GET endpoint
+      summary: 返回task对象.
       tags: []
       responses:
         '200':
@@ -69,7 +68,7 @@ paths:
                 $ref: ../common/models/error.v1.yaml
       description: 返回task对象.
     post:
-      summary: ''
+      summary: 重新生成视频
       responses:
         '200':
           description: OK
@@ -83,7 +82,7 @@ paths:
             application/json:
               schema:
                 $ref: ../common/models/error.v1.yaml
-      description: 重新生成视频
+      description: 重新生成视频. 请在更新了summary后者timeline之后重新生成视频.
   '/task/{task_id}/summary':
     parameters:
       - type: string
@@ -91,7 +90,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: 获取当前任务的summary.
       tags: []
       responses:
         '200':
@@ -102,7 +101,7 @@ paths:
                 $ref: ../common/models/summary.v1.yaml
       description: 获取当前任务的summary.
     post:
-      summary: ''
+      summary: 更新当前任务的文章摘要.
       responses:
         '200':
           description: 更新成功
@@ -129,7 +128,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: 获取任务时间轴.
       tags: []
       responses:
         '200':
@@ -140,7 +139,7 @@ paths:
                 $ref: ../common/models/timeline.v1.yaml
       description: 获取任务时间轴.
     post:
-      summary: ''
+      summary: 更新任务时间轴.
       responses:
         '200':
           description: OK
