@@ -3,7 +3,9 @@ info:
   title: 视频生成任务
   version: '1.0'
   description: 视频生成任务API
-servers: []
+servers:
+  - url: 'http://vidpress_api_server/v1'
+    description: ''
 paths:
   /task:
     get:
