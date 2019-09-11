@@ -1,0 +1,23 @@
+title: Timeline
+type: object
+properties:
+  tracks:
+    type: array
+    items:
+      type: object
+      properties:
+        media_path:
+          type: string
+        media_url:
+          type: string
+        start:
+          type: string
+        duration:
+          type: string
+        type:
+          oneOf:
+            - description: video
+            - description: image
+            - description: audio
+          type: string
+description: "对时间轴的描述. 请注意, 此json中client需要关心的就是下面列出来的字段. 在tracks中有type为'audio'的, 请勿更改他们在列表中的顺序. 调整素材顺序的话请只调整type为'video'和'image'的track"

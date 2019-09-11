@@ -1,0 +1,159 @@
+openapi: 3.0.0
+info:
+  title: task
+  version: '1.0'
+  description: Task api
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /task:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/task.v1.yaml
+      description: 返回任务列表.
+    post:
+      summary: ''
+      responses:
+        '200':
+          description: 任务创建成功
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/task.v1.yaml
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      description: 创建一个视频生成任务.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/task_config.v1.yaml
+    parameters: []
+  '/task/{task_id}':
+    parameters:
+      - type: string
+        name: task_id
+        in: path
+        required: true
+        schema:
+          type: number
+        description: task id
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/task.v1.yaml
+        '404':
+          description: 任务没找到
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      description: 返回task对象.
+    post:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/task.v1.yaml
+        '404':
+          description: 任务未找到
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      description: 重新生成视频
+  '/task/{task_id}/summary':
+    parameters:
+      - type: string
+        name: task_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/summary.v1.yaml
+      description: 获取当前任务的summary.
+    post:
+      summary: ''
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/summary.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/summary.v1.yaml
+      description: '更新当前任务的文章摘要. 请注意本操作会更新tts结果, 所以可能会有1分钟左右的response时间, 更新完摘要后timeline会有改变, 请再次请求/task/{task_id}/timeline来获取最新timeline.'
+  '/task/{task_id}/timeline':
+    parameters:
+      - type: string
+        name: task_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/timeline.v1.yaml
+      description: 获取任务时间轴.
+    post:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/timeline.v1.yaml
+      description: 更新任务时间轴.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/timeline.v1.yaml
+components:
+  schemas: {}
+  securitySchemes: {}

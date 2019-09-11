@@ -1,0 +1,10 @@
+title: Progress
+type: object
+properties:
+  percentage:
+    type: integer
+    description: 0~100
+  message:
+    type: string
+    description: 此进度描述
+description: 视频生成进度

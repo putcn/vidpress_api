@@ -1,0 +1,10 @@
+title: Error
+type: object
+properties:
+  code:
+    type: integer
+    description: 错误代码
+  message:
+    type: string
+    description: 错误描述
+description: 错误

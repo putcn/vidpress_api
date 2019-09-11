@@ -1,0 +1,17 @@
+title: Task_config
+type: object
+properties:
+  news_url:
+    type: string
+    description: '新闻url, 目前只支持百家号url'
+  tts_per:
+    type: string
+    description: 发音人
+  duration:
+    type: integer
+    description: '目标视频时长, 单位秒'
+required:
+  - news_url
+  - tts_per
+  - duration
+description: 视频生成任务参数
