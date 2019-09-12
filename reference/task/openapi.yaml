@@ -19,7 +19,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: ../common/models/task.v1.yaml
+                  $ref: '#/components/schemas/Task'
       description: 返回任务列表.
     post:
       summary: 创建视频生成任务
@@ -29,19 +29,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: ../common/models/task.v1.yaml
+                $ref: '#/components/schemas/Task'
         '400':
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: ../common/models/error.v1.yaml
+                $ref: '#/components/schemas/Error'
       description: 创建一个视频生成任务.
       requestBody:
         content:
           application/json:
             schema:
-              $ref: ../common/models/task_config.v1.yaml
+              $ref: '#/components/schemas/Task_config'
     parameters: []
   '/task/{task_id}':
     parameters:
@@ -61,13 +61,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: ../common/models/task.v1.yaml
+                $ref: '#/components/schemas/Task'
         '404':
           description: 任务没找到
           content:
             application/json:
               schema:
-                $ref: ../common/models/error.v1.yaml
+                $ref: '#/components/schemas/Error'
       description: 返回task对象.
     post:
       summary: 重新生成视频
@@ -77,13 +77,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: ../common/models/task.v1.yaml
+                $ref: '#/components/schemas/Task'
         '404':
           description: 任务未找到
           content:
             application/json:
               schema:
-                $ref: ../common/models/error.v1.yaml
+                $ref: '#/components/schemas/Error'
       description: 重新生成视频. 请在更新了summary后者timeline之后重新生成视频.
     delete:
       summary: 终止任务
@@ -106,7 +106,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: ../common/models/summary.v1.yaml
+                $ref: '#/components/schemas/Summary'
       description: 获取当前任务的文章摘要.
     post:
       summary: 更新当前任务的文章摘要.
@@ -116,18 +116,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: ../common/models/summary.v1.yaml
+                $ref: '#/components/schemas/Summary'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: ../common/models/error.v1.yaml
+                $ref: '#/components/schemas/Error'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: ../common/models/summary.v1.yaml
+              $ref: '#/components/schemas/Summary'
       description: '更新当前任务的文章摘要. 请注意本操作会更新tts结果, 所以可能会有1分钟左右的response时间, 更新完摘要后timeline会有改变, 请再次请求/task/{task_id}/timeline来获取最新timeline.'
   '/task/{task_id}/timeline':
     parameters:
@@ -144,7 +144,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: ../common/models/timeline.v1.yaml
+                $ref: '#/components/schemas/Timeline'
       description: 获取任务时间轴.
     post:
       summary: 更新任务时间轴.
@@ -154,19 +154,203 @@ paths:
           content:
             application/json:
               schema:
-                $ref: ../common/models/timeline.v1.yaml
-      description: 更新任务时间轴.
+                $ref: '#/components/schemas/Timeline'
+      description: '更新任务时间轴. 更新完成后请POST /task/{task_id} 来重新生产视频'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: ../common/models/timeline.v1.yaml
+              $ref: '#/components/schemas/Timeline'
 components:
   schemas:
-    test:
-      title: test
+    Error:
+      title: Error
       type: object
       properties:
-        id:
+        code:
+          type: integer
+          description: 错误代码
+        message:
           type: string
+          description: 错误描述
+      description: 错误
+    Production_report:
+      title: Production_report
+      type: object
+      description: 视频生成过程报告
+      properties:
+        start:
+          type: string
+          description: 生成开始时间
+        end:
+          type: string
+          description: 结束时间
+        duration:
+          type: string
+          description: 生成过程时长
+        steps:
+          type: array
+          description: 生成过程每一步耗时
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: 步骤名称
+              start:
+                type: string
+                description: 步骤开始时间
+              end:
+                type: string
+                description: 步骤结束时间
+              duration:
+                type: string
+                description: 步骤时长
+        metadata:
+          type: object
+          properties:
+            GIT_VERSION:
+              type: string
+              description: vidpress git 版本
+            GIT_BRANCH:
+              type: string
+              description: vidpress git branch name
+            API error count:
+              type: string
+              description: api 错误个数
+            duplicated image count:
+              type: string
+              description: 重复图片个数
+            timeline gaps count:
+              type: string
+              description: 时间轴空白时间段个数
+            timeline gaps:
+              type: array
+              description: 空白时间段和相关素材
+              items: {}
+    Progress:
+      title: Progress
+      type: object
+      properties:
+        percentage:
+          type: integer
+          description: 0~100
+        message:
+          type: string
+          description: 此进度描述
+      description: 视频生成进度
+    Summary:
+      title: Summary
+      type: object
+      description: 生成tts的文章摘要
+      properties:
+        summary:
+          type: string
+          description: 文章摘要
+      required:
+        - summary
+    Task_config:
+      title: Task_config
+      type: object
+      properties:
+        news_url:
+          type: string
+          description: '新闻url, 目前只支持百家号url'
+        tts_per:
+          type: string
+          description: 发音人
+        duration:
+          type: integer
+          description: '目标视频时长, 单位秒'
+      required:
+        - news_url
+        - tts_per
+        - duration
+      description: 视频生成任务参数
+    Task:
+      title: Task
+      type: object
+      description: 视频生成任务
+      properties:
+        id:
+          type: integer
+          description: task id
+        config:
+          $ref: '#/components/schemas/Task_config'
+        status:
+          oneOf:
+            - description: waiting
+            - description: in_progress
+            - description: completed
+          type: string
+        estimation:
+          type: object
+          description: 任务时间预期
+          properties:
+            start_time:
+              type: integer
+              description: '预期的排队结束时间, 时间戳'
+            finish_time:
+              type: integer
+              description: '预期的视频生成完成时间, 时间戳'
+        progress:
+          type: array
+          items:
+            $ref: '#/components/schemas/Progress'
+        result:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Video'
+          description: '视频生产结果, 如果视频尚未生成或者生成失败此项为null'
+        error:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Error'
+          description: '任务错误描述, 如果尚未有错误此项为null'
+        production_report:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Production_report'
+          description: '视频生产过程报告, 包括开始结束时间, 时长, 版本信息等. 生成没有完成之前此项为null'
+    Timeline:
+      title: Timeline
+      type: object
+      properties:
+        tracks:
+          type: array
+          items:
+            type: object
+            properties:
+              media_path:
+                type: string
+              media_url:
+                type: string
+              start:
+                type: string
+              duration:
+                type: string
+              type:
+                oneOf:
+                  - description: video
+                    type: string
+                  - description: image
+                    type: string
+                  - description: audio
+                    type: string
+                type: string
+      description: "对时间轴的描述. 请注意, 此json中client需要关心的就是下面列出来的字段. 在tracks中有type为'audio'的, 请勿更改他们在列表中的顺序. 调整素材顺序的话请只调整type为'video'和'image'的track."
+    Video:
+      title: Video
+      type: object
+      properties:
+        url:
+          type: string
+          description: 视频文件url
+        cover_url:
+          type: string
+          description: ' 视频封面url'
+        duration:
+          type: integer
+          description: '视频时长, 单位为秒'
+      description: 生成的视频
   securitySchemes: {}

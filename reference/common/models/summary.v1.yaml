@@ -1,9 +1,0 @@
-title: Summary
-type: object
-description: 生成tts的文章摘要
-properties:
-  summary:
-    type: string
-    description: 文章摘要
-required:
-  - summary
