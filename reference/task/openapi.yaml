@@ -162,5 +162,11 @@ paths:
             schema:
               $ref: ../common/models/timeline.v1.yaml
 components:
-  schemas: {}
+  schemas:
+    test:
+      title: test
+      type: object
+      properties:
+        id:
+          type: string
   securitySchemes: {}
