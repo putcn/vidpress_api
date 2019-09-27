@@ -17,10 +17,19 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Task'
+                $ref: '#/components/schemas/Paged_tasks'
       description: 返回任务列表.
+      parameters:
+        - schema:
+            type: number
+          in: query
+          name: page
+          description: 'page number, 20 per page'
+        - schema:
+            type: string
+          in: query
+          name: task_ids
+          description: 'comma seperated task ids, e.g. 1,2,3'
     post:
       summary: 创建视频生成任务
       responses:
@@ -353,4 +362,20 @@ components:
           type: integer
           description: '视频时长, 单位为秒'
       description: 生成的视频
+    Paged_tasks:
+      title: Paged_tasks
+      type: object
+      properties:
+        count:
+          type: string
+        next:
+          type: string
+        previous:
+          type: string
+        results:
+          type:
+            - string
+            - array
+          items:
+            $ref: '#/components/schemas/Task'
   securitySchemes: {}
