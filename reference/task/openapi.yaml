@@ -261,12 +261,13 @@ components:
     Task_config:
       title: Task_config
       type: object
+      description: 视频生成任务参数
       properties:
         news_url:
           type: string
           description: '新闻url, 目前只支持百家号url'
         tts_per:
-          type: string
+          type: integer
           description: 发音人
         duration:
           type: integer
@@ -275,7 +276,6 @@ components:
         - news_url
         - tts_per
         - duration
-      description: 视频生成任务参数
     Task:
       title: Task
       type: object
