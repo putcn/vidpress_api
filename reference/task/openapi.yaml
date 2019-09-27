@@ -137,7 +137,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Summary'
-      description: '更新当前任务的文章摘要. 请注意本操作会更新tts结果, 所以可能会有1分钟左右的response时间, 更新完摘要后timeline会有改变, 请再次请求/task/{task_id}/timeline来获取最新timeline.'
+      description: 更新当前任务的文章摘要并重新生成视频.
   '/task/{task_id}/timeline':
     parameters:
       - type: string
@@ -164,7 +164,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Timeline'
-      description: '更新任务时间轴. 更新完成后请POST /task/{task_id} 来重新生产视频'
+      description: 更新任务时间轴并重新生成视频.
       requestBody:
         content:
           application/json:
