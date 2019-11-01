@@ -45,7 +45,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      description: 创建一个视频生成任务.
+      description: '创建一个视频生成任务. 配置中支持callback_url, 在任务有任何更新的时候request该url; 支持设定任务优先级, 3为普通优先级, 2为高优先级. 原则上支持1和0, 若非必要请勿占用. '
       requestBody:
         content:
           application/json:
@@ -93,7 +93,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      description: 重新生成视频. 请在更新了summary后者timeline之后重新生成视频.
+      description: 重新生成视频. 请在更新了summary后者timeline之后重新生成视频. 支持跟新task_config来更改任务优先级
       requestBody:
         content:
           application/json:
@@ -181,12 +181,8 @@ paths:
         name: task_id
         in: path
         required: true
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
     post:
-      summary: ''
+      summary: 上传文件
       responses:
         '200':
           description: OK
@@ -196,7 +192,7 @@ paths:
                 type: object
                 description: file_name
                 properties:
-                  file_name:
+                  media_path:
                     type: string
         '500':
           description: Internal Server Error
@@ -204,15 +200,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      requestBody: {}
+      requestBody:
+        description: ''
       parameters:
         - schema: {}
           in: query
           name: file
           required: true
+          description: 文件
         - schema: {}
           in: query
           name: file_name
+          description: 文件名
+      description: '上传文件到task中, 可以指定上传之后的文件名, 返回值为此文件在任务中的media_path'
   '/task/{task_id}/alignment':
     parameters:
       - type: string
@@ -220,7 +220,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: 返回图文对齐数据
       tags: []
       responses:
         '200':
@@ -231,7 +231,7 @@ paths:
                 $ref: '#/components/schemas/Alignment'
       requestBody: {}
     post:
-      summary: ''
+      summary: 上传图文对齐数据
       responses:
         '200':
           description: OK
@@ -244,6 +244,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Alignment'
+      description: '设定图片和文字对齐数据. 注意, 上传此项将覆盖自动媒体查找和对齐过程, 完全手动设定文字和媒体'
 components:
   schemas:
     Error:
@@ -465,8 +466,11 @@ components:
     Progress_callback:
       title: Progress_callback
       type: object
+      description: 任务设定的callback_url中每次收到的数据格式
       properties:
-        id:
+        type:
+          type: string
+        msg:
           type: string
     Alignment:
       title: Alignment
@@ -478,7 +482,7 @@ components:
             type: string
           media:
             type: array
-            description: list of file path
+            description: list of media path
             items:
               type: string
   securitySchemes: {}
