@@ -94,6 +94,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       description: 重新生成视频. 请在更新了summary后者timeline之后重新生成视频.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task_config'
     delete:
       summary: 终止任务
       responses:
@@ -170,6 +175,75 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Timeline'
+  '/task/{task_id}/upload':
+    parameters:
+      - type: string
+        name: task_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+    post:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: file_name
+                properties:
+                  file_name:
+                    type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody: {}
+      parameters:
+        - schema: {}
+          in: query
+          name: file
+          required: true
+        - schema: {}
+          in: query
+          name: file_name
+  '/task/{task_id}/alignment':
+    parameters:
+      - type: string
+        name: task_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alignment'
+      requestBody: {}
+    post:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alignment'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Alignment'
 components:
   schemas:
     Error:
@@ -272,8 +346,11 @@ components:
         duration:
           type: integer
           description: '目标视频时长, 单位秒'
+        callback_url:
+          type: string
+        priority:
+          type: number
       required:
-        - news_url
         - tts_per
         - duration
     Task:
@@ -351,6 +428,7 @@ components:
     Video:
       title: Video
       type: object
+      description: 生成的视频
       properties:
         url:
           type: string
@@ -361,7 +439,13 @@ components:
         duration:
           type: integer
           description: '视频时长, 单位为秒'
-      description: 生成的视频
+        title:
+          type: string
+          description: 视频标题
+        summary:
+          type: string
+        category:
+          type: string
     Paged_tasks:
       title: Paged_tasks
       type: object
@@ -378,4 +462,23 @@ components:
             - array
           items:
             $ref: '#/components/schemas/Task'
+    Progress_callback:
+      title: Progress_callback
+      type: object
+      properties:
+        id:
+          type: string
+    Alignment:
+      title: Alignment
+      type: array
+      items:
+        type: object
+        properties:
+          text:
+            type: string
+          media:
+            type: array
+            description: list of file path
+            items:
+              type: string
   securitySchemes: {}
