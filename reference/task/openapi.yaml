@@ -349,8 +349,15 @@ components:
           description: '目标视频时长, 单位秒'
         callback_url:
           type: string
+          description: 任务有progress时候的callback url
         priority:
           type: number
+          default: 3
+          description: '任务优先级, 3为普通优先级, 2为高优先级. 原则上支持1和0, 若非必要请勿占用. '
+          enum:
+            - 2
+            - 3
+          example: '3'
       required:
         - tts_per
         - duration
