@@ -175,12 +175,16 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Timeline'
-  '/task/{task_id}/upload':
+  '/task/{task_id}/upload/{filename}':
     parameters:
       - type: string
         name: task_id
         in: path
         required: true
+      - schema:
+          type: string
+        name: filename
+        in: path
     post:
       summary: 上传文件
       responses:
@@ -208,10 +212,6 @@ paths:
           name: file
           required: true
           description: 文件
-        - schema: {}
-          in: query
-          name: file_name
-          description: 文件名
       description: '上传文件到task中, 可以指定上传之后的文件名, 返回值为此文件在任务中的media_path'
   '/task/{task_id}/alignment':
     parameters:
