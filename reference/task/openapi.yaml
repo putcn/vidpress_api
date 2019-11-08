@@ -244,7 +244,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Alignment'
-      description: '设定图片和文字对齐数据. 注意, 上传此项将覆盖自动媒体查找和对齐过程, 完全手动设定文字和媒体'
+      description: '设定图片和文字对齐数据. 注意, 上传此项将覆盖自动媒体查找和对齐过程, 完全手动设定文字和媒体. media path可以是已经上传完成的文件路径(相对), 或者URL'
 components:
   schemas:
     Error:
