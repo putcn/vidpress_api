@@ -300,8 +300,8 @@ components:
               type: string
               description: vidpress git branch name
             API error count:
-              type: string
               description: api 错误个数
+              type: string
             duplicated image count:
               type: string
               description: 重复图片个数
@@ -312,6 +312,14 @@ components:
               type: array
               description: 空白时间段和相关素材
               items: {}
+        start_timestamp:
+          type: number
+          format: float
+          description: 开始时间的时间戳
+        end_timestamp:
+          type: number
+          format: float
+          description: 结束时间的时间戳
     Progress:
       title: Progress
       type: object
@@ -340,7 +348,7 @@ components:
       properties:
         news_url:
           type: string
-          description: '新闻url, 目前只支持百家号url'
+          description: '新闻url, 目前只支持百家号url, 可以为空'
         tts_per:
           type: integer
           description: 发音人
@@ -409,6 +417,7 @@ components:
     Timeline:
       title: Timeline
       type: object
+      description: "对时间轴的描述. 请注意, 此json中client需要关心的就是下面列出来的字段. 在tracks中有type为'audio'的, 请勿更改他们在列表中的顺序. 调整素材顺序的话请只调整type为'video'和'image'的track."
       properties:
         tracks:
           type: array
@@ -419,20 +428,20 @@ components:
                 type: string
               media_url:
                 type: string
+                format: uri
               start:
                 type: string
               duration:
-                type: string
+                type: number
+                format: float
+                example: '3.5'
               type:
-                oneOf:
-                  - description: video
-                    type: string
-                  - description: image
-                    type: string
-                  - description: audio
-                    type: string
                 type: string
-      description: "对时间轴的描述. 请注意, 此json中client需要关心的就是下面列出来的字段. 在tracks中有type为'audio'的, 请勿更改他们在列表中的顺序. 调整素材顺序的话请只调整type为'video'和'image'的track."
+                enum:
+                  - video
+                  - audio
+                  - image
+                example: video
     Video:
       title: Video
       type: object
@@ -459,17 +468,19 @@ components:
       type: object
       properties:
         count:
-          type: string
+          type: integer
         next:
           type: string
+          format: uri
+          description: 下一页内容url
         previous:
           type: string
+          format: uri
+          description: 上一页内容url
         results:
-          type:
-            - string
-            - array
+          type: array
           items:
-            $ref: '#/components/schemas/Task'
+            $ref: ''
     Progress_callback:
       title: Progress_callback
       type: object
@@ -487,9 +498,10 @@ components:
         properties:
           text:
             type: string
+            description: 本段对应的文本
           media:
             type: array
-            description: list of media path
+            description: 'list of media path, can be either url or relative path'
             items:
               type: string
   securitySchemes: {}
