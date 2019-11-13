@@ -245,6 +245,12 @@ paths:
             schema:
               $ref: '#/components/schemas/Alignment'
       description: '设定图片和文字对齐数据. 注意, 上传此项将覆盖自动媒体查找和对齐过程, 完全手动设定文字和媒体. media path可以是已经上传完成的文件路径(相对), 或者URL'
+    delete:
+      summary: 删除手动对齐数据
+      responses:
+        '200':
+          description: OK
+      description: '删除手动对齐数据, 恢复使用自动对齐'
 components:
   schemas:
     Error:
@@ -492,16 +498,20 @@ components:
           type: string
     Alignment:
       title: Alignment
-      type: array
-      items:
-        type: object
-        properties:
-          text:
-            type: string
-            description: 本段对应的文本
-          media:
-            type: array
-            description: 'list of media path, can be either url or relative path'
-            items:
-              type: string
+      type: object
+      properties:
+        alignment:
+          type: array
+          items:
+            type: object
+            properties:
+              text:
+                type: string
+                description: 本段对应的文本
+              media:
+                type: array
+                description: 'list of media path, can be either url or relative path'
+                items:
+                  type: string
+      description: 手动媒体与文本对齐
   securitySchemes: {}
