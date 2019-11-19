@@ -329,6 +329,7 @@ components:
     Progress:
       title: Progress
       type: object
+      description: 视频生成进度. task callback the url 中会post此数据
       properties:
         percentage:
           type: integer
@@ -336,7 +337,8 @@ components:
         message:
           type: string
           description: 此进度描述
-      description: 视频生成进度
+        task_id:
+          type: number
     Summary:
       title: Summary
       type: object
@@ -487,15 +489,6 @@ components:
           type: array
           items:
             $ref: ''
-    Progress_callback:
-      title: Progress_callback
-      type: object
-      description: 任务设定的callback_url中每次收到的数据格式
-      properties:
-        type:
-          type: string
-        msg:
-          type: string
     Alignment:
       title: Alignment
       type: object
