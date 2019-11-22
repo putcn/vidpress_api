@@ -339,6 +339,12 @@ components:
           description: 此进度描述
         task_id:
           type: number
+        status:
+          type: string
+          enum:
+            - waiting
+            - in_progress
+            - completed
     Summary:
       title: Summary
       type: object
