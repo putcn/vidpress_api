@@ -359,13 +359,15 @@ components:
       title: Task_config
       type: object
       description: 视频生成任务参数
+      x-examples:
+        example-1: {}
       properties:
         news_url:
           type: string
           description: '新闻url, 目前只支持百家号url, 可以为空'
         tts_per:
           type: integer
-          description: 发音人
+          description: '发音人代码, 0: 度小美, 1: 度小宇, 3: 度逍遥, 4: 度丫丫, 100: 度小雯(鸽子), 106: 度博文, 103: 度米朵. 默认值为100'
         duration:
           type: integer
           description: '目标视频时长, 单位秒'
