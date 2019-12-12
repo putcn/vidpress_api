@@ -73,6 +73,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
+              examples: {}
         '404':
           description: 任务没找到
           content:
@@ -104,8 +105,17 @@ paths:
     delete:
       summary: 终止任务
       responses:
-        '204':
-          description: No Content
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+              examples:
+                success message:
+                  value:
+                    code: 200
+                    message: task deleted
       description: 终止任务.
   '/task/{task_id}/summary':
     parameters:
@@ -252,6 +262,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+              examples:
+                success message:
+                  value:
+                    code: 200
+                    message: alignment deleted
       description: '删除手动对齐数据, 恢复使用自动对齐'
 components:
   schemas:
