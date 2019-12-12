@@ -108,9 +108,14 @@ paths:
         '200':
           description: OK
           content:
-            text/html:
+            application/json:
               schema:
-                type: string
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
               examples:
                 success message:
                   value:
@@ -263,9 +268,14 @@ paths:
         '200':
           description: OK
           content:
-            text/html:
+            application/json:
               schema:
-                type: string
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
               examples:
                 success message:
                   value:
