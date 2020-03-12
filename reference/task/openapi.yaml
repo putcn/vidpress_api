@@ -513,6 +513,9 @@ components:
           type: string
         category:
           type: string
+        timeline_url:
+          type: string
+          description: url to fetch time
     Paged_tasks:
       title: Paged_tasks
       type: object
