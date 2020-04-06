@@ -405,6 +405,7 @@ components:
         callback_url:
           type: string
           description: 任务有progress时候的callback url
+          format: uri
         priority:
           type: number
           default: 3
@@ -416,6 +417,24 @@ components:
         summary:
           type: string
           description: "provide customized summary. when this field is provided, vidpress's summarization will be disabled for this task"
+        image_tag:
+          type: string
+          example: renminribao-1.0.1
+        extra_configs:
+          type: object
+          example: "{'ALIGNMENT/MAX_SOURCE_CONFIDENCE':4}"
+        source:
+          type: array
+          example: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
+          items:
+            type: string
+        expected_output:
+          type: string
+          enum:
+            - extraction
+            - timeline
+            - video
+          example: video
       required:
         - tts_per
         - duration
