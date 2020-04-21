@@ -192,6 +192,44 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Timeline'
+  '/task/{task_id}/upload/{filename}':
+    parameters:
+      - type: string
+        name: task_id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: filename
+        in: path
+    post:
+      summary: 上传文件
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: file_name
+                properties:
+                  media_path:
+                    type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        description: ''
+      parameters:
+        - schema: {}
+          in: query
+          name: file
+          required: true
+          description: 文件
+      description: '上传文件到task中, 可以指定上传之后的文件名, 返回值为此文件在任务中的media_path'
   '/task/{task_id}/alignment':
     parameters:
       - type: string
@@ -244,44 +282,6 @@ paths:
                     code: 200
                     message: alignment deleted
       description: '删除手动对齐数据, 恢复使用自动对齐'
-  '/task/{task_id}/upload/{filename}':
-    parameters:
-      - type: string
-        name: task_id
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: filename
-        in: path
-    post:
-      summary: 上传文件
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                description: file_name
-                properties:
-                  media_path:
-                    type: string
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      requestBody:
-        description: ''
-      parameters:
-        - schema: {}
-          in: query
-          name: file
-          required: true
-          description: 文件
-      description: '上传文件到task中, 可以指定上传之后的文件名, 返回值为此文件在任务中的media_path'
   '/task/{task_id}/rough_timeline':
     parameters:
       - schema:
@@ -371,8 +371,8 @@ components:
               type: string
               description: vidpress git branch name
             API error count:
-              type: string
               description: api 错误个数
+              type: string
             duplicated image count:
               type: string
               description: 重复图片个数
@@ -383,17 +383,18 @@ components:
               type: array
               description: 空白时间段和相关素材
               items: {}
-        end_timestamp:
-          type: number
-          format: float
-          description: 结束时间的时间戳
         start_timestamp:
           type: number
           format: float
           description: 开始时间的时间戳
+        end_timestamp:
+          type: number
+          format: float
+          description: 结束时间的时间戳
     Progress:
       title: Progress
       type: object
+      description: 视频生成进度. task callback the url 中会post此数据
       properties:
         percentage:
           type: integer
@@ -401,15 +402,14 @@ components:
         message:
           type: string
           description: 此进度描述
+        task_id:
+          type: number
         status:
           type: string
           enum:
             - waiting
             - in_progress
             - completed
-        task_id:
-          type: number
-      description: 视频生成进度. task callback the url 中会post此数据
     Summary:
       title: Summary
       type: object
@@ -436,27 +436,10 @@ components:
         duration:
           type: integer
           description: '目标视频时长, 单位秒'
-        expected_output:
+        callback_url:
           type: string
-          enum:
-            - extraction
-            - timeline
-            - video
-          example: video
-        source:
-          type: array
-          example: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
-          items:
-            type: string
-        extra_configs:
-          type: object
-          example: "{'ALIGNMENT/MAX_SOURCE_CONFIDENCE':4}"
-        image_tag:
-          type: string
-          example: renminribao-1.0.1
-        summary:
-          type: string
-          description: "provide customized summary. when this field is provided, vidpress's summarization will be disabled for this task"
+          description: 任务有progress时候的callback url
+          format: uri
         priority:
           type: number
           default: 3
@@ -465,10 +448,27 @@ components:
             - 2
             - 3
           example: '3'
-        callback_url:
+        summary:
           type: string
-          description: 任务有progress时候的callback url
-          format: uri
+          description: "provide customized summary. when this field is provided, vidpress's summarization will be disabled for this task"
+        image_tag:
+          type: string
+          example: renminribao-1.0.1
+        extra_configs:
+          type: object
+          example: "{'ALIGNMENT/MAX_SOURCE_CONFIDENCE':4}"
+        source:
+          type: array
+          example: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
+          items:
+            type: string
+        expected_output:
+          type: string
+          enum:
+            - extraction
+            - timeline
+            - video
+          example: video
       required:
         - tts_per
         - duration
@@ -521,6 +521,7 @@ components:
     Timeline:
       title: Timeline
       type: object
+      description: "对时间轴的描述. 请注意, 此json中client需要关心的就是下面列出来的字段. 在tracks中有type为'audio'的, 请勿更改他们在列表中的顺序. 调整素材顺序的话请只调整type为'video'和'image'的track."
       properties:
         tracks:
           type: array
@@ -536,19 +537,19 @@ components:
                 type: string
               duration:
                 type: number
-                example: '3.5'
                 format: float
+                example: '3.5'
               type:
                 type: string
-                example: video
                 enum:
                   - video
                   - audio
                   - image
-      description: "对时间轴的描述. 请注意, 此json中client需要关心的就是下面列出来的字段. 在tracks中有type为'audio'的, 请勿更改他们在列表中的顺序. 调整素材顺序的话请只调整type为'video'和'image'的track."
+                example: video
     Video:
       title: Video
       type: object
+      description: 生成的视频
       properties:
         url:
           type: string
@@ -559,35 +560,16 @@ components:
         duration:
           type: integer
           description: '视频时长, 单位为秒'
-        timeline_url:
-          type: string
-          description: url to fetch time
-        category:
-          type: string
-        summary:
-          type: string
         title:
           type: string
           description: 视频标题
-      description: 生成的视频
-    Alignment:
-      title: Alignment
-      type: object
-      properties:
-        alignment:
-          type: array
-          items:
-            type: object
-            properties:
-              text:
-                type: string
-                description: 本段对应的文本
-              media:
-                type: array
-                description: 'list of media path, can be either url or relative path'
-                items:
-                  type: string
-      description: 手动媒体与文本对齐
+        summary:
+          type: string
+        category:
+          type: string
+        timeline_url:
+          type: string
+          description: url to fetch time
     Paged_tasks:
       title: Paged_tasks
       type: object
@@ -606,4 +588,34 @@ components:
           type: array
           items:
             $ref: ''
+    Alignment:
+      title: Alignment
+      type: object
+      description: 手动媒体与文本对齐
+      properties:
+        alignment:
+          type: array
+          items:
+            type: object
+            properties:
+              text:
+                type: string
+                description: 本段对应的文本
+              media:
+                type: array
+                description: 'list of media path, can be either url or relative path'
+                items:
+                  type:
+                    - string
+                    - object
+                  description: "数组成员可以是media url的string, 也可以是{url:'<media url>', expected_duration:<duration in second>}"
+                  properties:
+                    url:
+                      type: string
+                    expected_duration:
+                      type: number
+                  required:
+                    - url
+            required:
+              - text
   securitySchemes: {}
