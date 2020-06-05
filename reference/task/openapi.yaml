@@ -316,6 +316,74 @@ paths:
         /timeline 不会再对 timeline 进行任何处理，用户需要确定所有 timeline.json 里提供的档案都已透过 /upload/{filename} 上传过。
 
         /roug_timeline 则是会读取 caption_tracks 里的文字，重新生成 TTS，按照最终 TTS duraiton 微调 media tracks 的 duration. media tracks 里提供的 media_path也可以是 URL，系统会帮助用户下载。
+  '/task/{task_id}/resource/{filename}}':
+    parameters:
+      - schema:
+          type: string
+        name: task_id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: filename
+        in: path
+        required: true
+    get:
+      summary: "\bResource CRUD endpoing"
+      tags: []
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+      operationId: get-task-task_id-resource
+      description: |-
+        fetch a resouce file under the raw_materials folder if {filename} is provided and {filename} exists.
+
+        fetch a list of resources under the {filename} if {filename} is a folder
+
+        fetch a list of resources under the raw_materials folder if {filename} is not provided.
+    post:
+      summary: ''
+      operationId: post-task-task_id-resource
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '404':
+          description: Not Found
+      description: '上传文件到task中, 可以指定上传之后的文件名, 返回值为此文件在任务中的media_path'
+      parameters:
+        - schema: {}
+          in: query
+          name: file
+          description: 文件
+          required: true
+    delete:
+      summary: ''
+      operationId: delete-task-task_id-resource
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+      description: 'Delete the specified {filename}'
+    put:
+      summary: ''
+      operationId: put-task-task_id-resource-filename
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+      description: 'Update the content at {filename} with body data.'
+      parameters:
+        - schema: {}
+          in: query
+          name: file
+          description: 文件
+          required: true
 components:
   schemas:
     Error:
