@@ -334,6 +334,12 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resource_folder'
+              examples:
+                example-1: {}
         '404':
           description: Not Found
       operationId: get-task-task_id-resource
@@ -686,4 +692,27 @@ components:
                     - url
             required:
               - text
+    Resource_folder:
+      title: Folder Resource
+      type: object
+      properties:
+        result:
+          type:
+            - string
+            - array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              path:
+                type: string
+      x-examples:
+        example1:
+          result:
+            - type: file
+              path: path1
+            - type: folder
+              path: path2
+      description: Media Resouce folder of a project.
   securitySchemes: {}
