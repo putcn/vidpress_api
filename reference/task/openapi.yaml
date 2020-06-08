@@ -332,23 +332,30 @@ paths:
       summary: "\bResource CRUD endpoing"
       tags: []
       responses:
+        '200':
+          description: File body
         '404':
           description: Not Found
       operationId: get-task-task_id-resource
-      description: "下載對應{file_path}的檔案。\n\n{file_path} 是以 task 的主目錄為基準，即與 vidpress.ini, news.json and raw_materials 的 directory. \n\n基本應用：\n/task/{task_id}/resource/raw_materials/image1.jpeg\n\n如果 {file_path} 是指向一個目錄，return 404"
+      description: "下載對應{file_path}的檔案。\n雖可以只加一個檔案名，但強烈建議將上傳的檔案放在 raw_materials 目錄下。\n\nraw_materials 目錄是每一個任務儲存 resource 檔案的地方，為求統一，請盡可能地利用 raw_materials 儲存你上傳的檔案\n\n{file_path} 是以 task 的主目錄為基準，即與 vidpress.ini, news.json and raw_materials 的 directory. \n\n基本應用：\n/task/{task_id}/resource/raw_materials/image1.jpeg\n\n如果 {file_path} 是指向一個目錄，return 404\n\n如果 {file_path} 用了 /../, return 404"
     post:
       summary: ''
       operationId: post-task-task_id-resource
       responses:
-        '200':
-          description: OK
         '201':
           description: Created
-        '400':
-          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file_path:
+                    type: string
+        '404':
+          description: Not Found
         '409':
           description: Conflict
-      description: "上传文件到task中 到對應{file_path}的位址, 可以指定上传之后的文件名, 返回值为此文件在任务中的 file_path\n\n{file_path} 是以 task 的主目錄為基準，即與 vidpress.ini, news.json and raw_materials 的 directory. \n雖可以只加一個檔案名，但強烈建議將上傳的檔案放在 raw_materials 目錄下。\n\n基本應用：\n/task/{task_id}/resource/raw_materials/image2.jpeg # 上傳 file content 到 raw_materials/image2.jpeg 的位址。\n\n同時更新 media.json，下次請求 /task/{task_id}/resource 時，也會包括這檔案。\n\n如果 {file_path} 是指向一個目錄，return 404\n\n如果 {file_path} 是指向一個以建立的檔案，return 409 (conflict)，請使用 PUT 來更新文件\n"
+      description: "上传文件到task中 到對應{file_path}的位址, 可以指定上传之后的文件名, 返回值为此文件在任务中的 file_path\n\n{file_path} 是以 task 的主目錄為基準，即與 vidpress.ini, news.json and raw_materials 的 directory. \n雖可以只加一個檔案名，但強烈建議將上傳的檔案放在 raw_materials 目錄下。\nraw_materials 目錄是每一個任務儲存 resource 檔案的地方，為求統一，請盡可能地利用 raw_materials 儲存你上傳的檔案\n\n基本應用：\n/task/{task_id}/resource/raw_materials/image2.jpeg # 上傳 file content 到 raw_materials/image2.jpeg 的位址。\n\n同時更新 media.json，下次請求 /task/{task_id}/resource 時，也會包括這檔案。\n\n如果 {file_path} 是指向一個目錄，return 404\n\n如果 {file_path} 是指向一個以建立的檔案，return 409 (conflict)，請使用 PUT 來更新文件\n\n如果 {file_path} 用了 /../, return 404"
       parameters:
         - schema: {}
           in: query
@@ -361,18 +368,32 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file_path:
+                    type: string
         '404':
           description: Not Found
-      description: "刪除已有在 {file_path} 的檔案. \n\n如果 {file_path} 還未存在，return 404\n\n如果 {file_path} 是指向一個目錄，return 404"
+      description: "刪除已有在 {file_path} 的檔案. \n\n如果 {file_path} 還未存在，return 404\n\n如果 {file_path} 是指向一個目錄，return 404\n\n如果 {file_path} 用了 /../, return 404"
     put:
       summary: ''
       operationId: put-task-task_id-resource-filename
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file_path:
+                    type: string
         '404':
           description: Not Found
-      description: "更新已有的 file content. \n\n如果 {file_path} 還未存在，將會建立檔案\n\n如果 {file_path} 是指向一個目錄，return 404\n"
+      description: "更新已有的 file content. \n\n更新 task 中對應 {file_path} 位址的文件, 返回值为此文件在任务中的 file_path\n\n{file_path} 是以 task 的主目錄為基準，即與 vidpress.ini, news.json and raw_materials 的 directory. \n雖可以只加一個檔案名，但強烈建議將上傳的檔案放在 raw_materials 目錄下。\nraw_materials 目錄是每一個任務儲存 resource 檔案的地方，為求統一，請盡可能地利用 raw_materials 儲存你上傳的檔案\n\n如果 {file_path} 還未存在，將會建立檔案\n\n如果 {file_path} 是指向一個目錄，return 404\n\n如果 {file_path} 用了 /../, return 404"
       parameters:
         - schema: {}
           in: query
@@ -402,8 +423,10 @@ paths:
                     result:
                       - type: video
                         filepath: raw_materials/title.mov
+        '404':
+          description: Not Found
       operationId: get-task-task_id-resource
-      description: "返回可用的 media candidates 列表 (media.json)\n\n以下為例子\n{\n  \"result\": \n  [\n    {\n      \"type\": \"video\",\n      \"file_path\": \"raw_materials/11e4be2236c446b99b3d20e2f1cc9750.3.jpeg\"\n    },\n    {media2...},\n    {media3...}\n  ]\n}\n\nfile_path 的數值，可以用在 /task/{task_id}/resource/{filename} 這個接口上"
+      description: "返回可用的 resource candidates 列表 (media.json)\n\npossible types: \"video\", \"image\n\n以下為例子\n{\n  \"resource_list\": \n  [\n    {\n      \"type\": \"video\",\n      \"file_path\": \"raw_materials/11e4be2236c446b99b3d20e2f1cc9750.3.jpeg\"\n    },\n    {media2...},\n    {media3...}\n  ]\n}\n\nfile_path 的數值，可以用在 /task/{task_id}/resource/{filename} 這個接口上"
 components:
   schemas:
     Error:
@@ -707,7 +730,7 @@ components:
             required:
               - text
     Resource_folder:
-      title: Folder Resource
+      title: resource_list
       type: object
       x-examples:
         example1:
@@ -718,10 +741,8 @@ components:
               path: path2
       description: Media Resouce folder of a project.
       properties:
-        result:
-          type:
-            - string
-            - array
+        'resource_list ':
+          type: array
           items:
             type: object
             properties:
