@@ -881,7 +881,9 @@ components:
     Topic:
       title: Topics
       type: object
-      description: 使用 media list 来制作视频
+      description: |-
+        使用 media list and queries 来制作视频
+        目前 queries 只是 place holder.
       properties:
         topics:
           type: object
@@ -907,6 +909,16 @@ components:
             expected_duration:
               type: string
               description: 'optional: if set, Vidpress will try its best to fix all the media into the final video with the expected_duration.'
+            queries:
+              type: array
+              description: User can also input a list of queries.
+              items:
+                type: object
+                properties:
+                  query:
+                    type: string
+                  value:
+                    type: string
       required:
         - topics
   securitySchemes: {}
