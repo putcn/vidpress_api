@@ -427,6 +427,30 @@ paths:
           description: Not Found
       operationId: get-task-task_id-resource
       description: "返回可用的 resource candidates 列表 (media.json)\n\npossible types: \"video\", \"image\n\n以下為例子\n{\n  \"resource_list\": \n  [\n    {\n      \"type\": \"video\",\n      \"file_path\": \"raw_materials/11e4be2236c446b99b3d20e2f1cc9750.3.jpeg\"\n    },\n    {media2...},\n    {media3...}\n  ]\n}\n\nfile_path 的數值，可以用在 /task/{task_id}/resource/{filename} 這個接口上"
+  '/task/{task_id}/topics':
+    parameters:
+      - schema:
+          type: string
+        name: task_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-task-task_id-topics
+    post:
+      summary: ''
+      operationId: post-task-task_id-topics
+      responses:
+        '200':
+          description: OK
+      description: '设定图片和文字对齐数据. 注意, 上传此项将覆盖自动媒体查找和对齐过程, 完全手动设定文字和媒体. media path可以是已经上传完成的文件路径(相对), 或者URL'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Topic'
 components:
   schemas:
     Error:
@@ -854,4 +878,35 @@ components:
                 type: string
               file_path:
                 type: string
+    Topic:
+      title: Topics
+      type: object
+      description: 使用 media list 来制作视频
+      properties:
+        topics:
+          type: object
+          properties:
+            media:
+              type: array
+              description: list of media path
+              items:
+                type: object
+                description: ''
+                properties:
+                  url:
+                    type: string
+                  expected_duration:
+                    type: number
+                    description: optional
+                  type:
+                    type: string
+                    description: video or image
+                required:
+                  - url
+                  - type
+            expected_duration:
+              type: string
+              description: 'optional: if set, Vidpress will try its best to fix all the media into the final video with the expected_duration.'
+      required:
+        - topics
   securitySchemes: {}
