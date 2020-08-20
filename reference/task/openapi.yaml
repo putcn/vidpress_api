@@ -707,6 +707,12 @@ components:
             - timeline
             - video
           example: video
+        title:
+          type: string
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Paragraph'
       required:
         - news_url
         - tts_per
@@ -921,4 +927,23 @@ components:
                     type: string
       required:
         - topics
+    Paragraph:
+      title: Paragraph
+      type: object
+      properties:
+        type:
+          type: string
+          default: text
+        data:
+          type: string
+          description: 'can be media url, media path, or paragraph text itself'
+      required:
+        - type
+      x-examples:
+        text type:
+          type: text
+          data: 能够看到，沙溢找到自己的座位之后，第一件事情就是把自己的准考证放在桌子上面，而且镜头还拍摄了一些准考证上面的信息，虽然这只是一个恶搞版本，但乍一看，还是有些真实的，毕业中学是奔跑中学，考场则是666考场，还是非常搞笑的，但照片却非常的逼真，使用了一张沙溢年轻时候的照片，所以也是被很多的粉丝调侃：差点以为是真的！
+        image type:
+          type: image
+          data: 'http://foo.bar/a.jpg'
   securitySchemes: {}
