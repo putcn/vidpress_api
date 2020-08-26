@@ -717,6 +717,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Paragraph'
+        resolution:
+          type: string
+          description: |-
+            Type: String
+            Default 1280x720
+
+            Resolution should follow [width]x[height] format
+            EX: 640x360, 或是 1280x720
       required:
         - news_url
         - tts_per
