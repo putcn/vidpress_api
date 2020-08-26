@@ -695,6 +695,10 @@ components:
                 {
                 "Production/CUSTOM_BG_MUSIC_PATH":"https://www.example.com/bg.mp3",
                 }
+            Output/width:
+              type: number
+            Output/height:
+              type: number
         source:
           type: array
           example: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
