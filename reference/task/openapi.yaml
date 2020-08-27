@@ -9,7 +9,7 @@ servers:
 paths:
   /task:
     get:
-      summary: 获取任务列表
+      summary: 获取视频生成任务列表
       tags: []
       responses:
         '200':
@@ -47,7 +47,65 @@ paths:
                 $ref: '#/components/schemas/Error'
         '509':
           description: Bandwidth Limit Exceeded (Apache)
-      description: "创建一个视频生成任务. 配置中支持callback_url, 在任务有任何更新的时候request该url; 支持设定任务优先级, 3为普通优先级, 2为高优先级. 原则上支持1和0, 若非必要请勿占用. \n创建视频任务支持不提供數據到news_url (EX: news_url=\"\", field 是 required, 但可以empty), 这样会创建一个空任务, 请通过task upload接口上传所需media, 然后call alignment接口来对齐媒体和文字并生成视频\n\nVidpress 提供部分自定義模塊，使用方法是在 \"extra_config\" 中添加配置。 \n\n开头视频\n\nVidpress支持自定义开头视频,使用方法是在extra_config中,提供以下两个参数\n{\n\"Video/CUSTOM_TITLE_PATH\":\"https://www.example.com/intro.mov\",\n\"DEFAULT/TITLE_DURATION\":3\n}\n请注意这两个参数需要一起导入,不然开头会无法正确播放。这个是由于一些legacy issue,导致我们不直接采用视频的长度,目前希望能在下一版本修复。\n\n片尾视频\n\nVidpress支持自定义片尾视频,提供的视频会在最后播放,片尾视频播放时,会同时播放片尾视频自带的音乐,背景音乐会在播放片尾视频前fadeout.\n使用方法是在extra_config中,提供以下参数\n\n{\n\"Production/CUSTOM_ENDING_PATH\":\"https://www.example.com/outro.mov\",\n}\n\n跟片头不一样,这里只需要CUSTOM_ENDING_PATH就够了\n\n\n台标\n\nVidpress支持自定义台标图片,目前台标只支持图片,不支持视频类（包括GIF）,导入后会在左上或右上放入台标图片,台标只会在视频Body里出现,片头片尾都不会展现台标。\n使用方法是在extra_config中,提供以下参数\n\n{\n\"Production/CUSTOM_LOGO_PATH\":\"http://www.example.com/baidu.png\",\n\"Production/LOGO_MARGIN\":\"20\",\n\"Production/LOGO_POS\":\"top-left\",\n}\n\nLOGO_MARGIN为optional,default是0,会同时指定上方和左右的margin.如果需要呈现上方和左右是不同数值的margin,请更改台标图片,将margin内崁到图里。\nLOGO_POS为optional,可用的数值为[\"top-left\",\"top-right\"],default是top-left。\n\n\n字幕块\n\nVidpress支持自定义字幕块图片,目前字幕块只支持图片,不支持视频类（包括GIF）,导入后会在下方正中放入字幕块图片,Vidpress不对字幕块图片做任何处理,请确保字幕块的长宽高是符合最终呈现的大小,建议大小约为1280x130上下,字幕块只会在视频Body里出现,片头片尾都不会展现字幕块。\n使用方法是在extra_config中,提供以下参数\n\n{\n\"Production/CUSTOM_CAPTION_BG_PATH\":\"https://www.example.com/cap_bg.png\",\n}\n\n背景音乐\n\nVidpress支持自定义背景音乐,背景音乐只会在视频Body里出现,片头片尾都不会拨出背景音乐。如果背景音乐的长度不够视频的长度,会自动重复歌曲。\n使用方法是在extra_config中,提供以下参数\n\n{\n\"Production/CUSTOM_BG_MUSIC_PATH\":\"https://www.example.com/bg.mp3\",\n}\n"
+      description: |
+        创建一个视频生成任务. 配置中支持callback_url, 在任务有任何更新的时候request该url; 支持设定任务优先级, 3为普通优先级, 2为高优先级. 原则上支持1和0, 若非必要请勿占用. 
+        创建视频任务支持不提供數據到news_url (EX: news_url="", field 是 required, 但可以empty), 这样会创建一个空任务, 请通过task upload接口上传所需media, 然后call alignment接口来对齐媒体和文字并生成视频
+
+        Vidpress 提供部分自定義模塊，使用方法是在 "extra_config" 中添加配置。 
+
+        开头视频
+
+        Vidpress支持自定义开头视频,使用方法是在extra_config中,提供以下两个参数
+        {
+        "Video/CUSTOM_TITLE_PATH":"https://www.example.com/intro.mov",
+        "DEFAULT/TITLE_DURATION":3
+        }
+        请注意这两个参数需要一起导入,不然开头会无法正确播放。这个是由于一些legacy issue,导致我们不直接采用视频的长度,目前希望能在下一版本修复。
+
+        片尾视频
+
+        Vidpress支持自定义片尾视频,提供的视频会在最后播放,片尾视频播放时,会同时播放片尾视频自带的音乐,背景音乐会在播放片尾视频前fadeout.
+        使用方法是在extra_config中,提供以下参数
+
+        {
+        "Production/CUSTOM_ENDING_PATH":"https://www.example.com/outro.mov",
+        }
+
+        跟片头不一样,这里只需要CUSTOM_ENDING_PATH就够了
+
+
+        台标
+
+        Vidpress支持自定义台标图片,目前台标只支持图片,不支持视频类（包括GIF）,导入后会在左上或右上放入台标图片,台标只会在视频Body里出现,片头片尾都不会展现台标。
+        使用方法是在extra_config中,提供以下参数
+
+        {
+        "Production/CUSTOM_LOGO_PATH":"http://www.example.com/baidu.png",
+        "Production/LOGO_MARGIN":"20",
+        "Production/LOGO_POS":"top-left",
+        }
+
+        LOGO_MARGIN为optional,default是0,会同时指定上方和左右的margin.如果需要呈现上方和左右是不同数值的margin,请更改台标图片,将margin内崁到图里。
+        LOGO_POS为optional,可用的数值为["top-left","top-right"],default是top-left。
+
+
+        字幕块
+
+        Vidpress支持自定义字幕块图片,目前字幕块只支持图片,不支持视频类（包括GIF）,导入后会在下方正中放入字幕块图片,Vidpress不对字幕块图片做任何处理,请确保字幕块的长宽高是符合最终呈现的大小,建议大小约为1280x130上下,字幕块只会在视频Body里出现,片头片尾都不会展现字幕块。
+        使用方法是在extra_config中,提供以下参数
+
+        {
+        "Production/CUSTOM_CAPTION_BG_PATH":"https://www.example.com/cap_bg.png",
+        }
+
+        背景音乐
+
+        Vidpress支持自定义背景音乐,背景音乐只会在视频Body里出现,片头片尾都不会拨出背景音乐。如果背景音乐的长度不够视频的长度,会自动重复歌曲。
+        使用方法是在extra_config中,提供以下参数
+
+        {
+        "Production/CUSTOM_BG_MUSIC_PATH":"https://www.example.com/bg.mp3",
+        }
       requestBody:
         content:
           application/json:
@@ -64,7 +122,7 @@ paths:
           type: number
         description: task id
     get:
-      summary: 返回task对象.
+      summary: 获取视频生成任务
       tags: []
       responses:
         '200':
@@ -103,7 +161,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Task_config'
     delete:
-      summary: 终止任务
+      summary: 终止视频生成任务
       responses:
         '200':
           description: OK
@@ -129,7 +187,7 @@ paths:
         in: path
         required: true
     get:
-      summary: 获取当前任务的文章摘要.
+      summary: 获取视频生成任务文章摘要
       tags: []
       responses:
         '200':
@@ -140,7 +198,7 @@ paths:
                 $ref: '#/components/schemas/Summary'
       description: 获取当前任务的文章摘要.
     post:
-      summary: 更新当前任务的文章摘要.
+      summary: 更新视频生成任务的文章摘要.
       responses:
         '200':
           description: 更新成功
@@ -167,7 +225,7 @@ paths:
         in: path
         required: true
     get:
-      summary: 获取任务时间轴.
+      summary: 获取视频生成任务时间轴
       tags: []
       responses:
         '200':
@@ -203,7 +261,7 @@ paths:
         name: filename
         in: path
     post:
-      summary: 上传文件
+      summary: 视频生成任务文件上传
       responses:
         '200':
           description: OK
@@ -237,7 +295,7 @@ paths:
         in: path
         required: true
     get:
-      summary: 返回图文对齐数据
+      summary: 获取视频生成任务图文对齐数据
       tags: []
       responses:
         '200':
@@ -290,7 +348,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: 获取视频生成任务图文粗略对齐
       tags: []
       responses:
         '200':
@@ -300,7 +358,7 @@ paths:
       operationId: get-task-task_id-rough_timeline
       description: 获取之前提供的rough timeline任务时间轴.
     post:
-      summary: ''
+      summary: 更新视频生成任务文件资源
       operationId: post-task-task_id-rough_timeline
       responses:
         '200':
@@ -329,7 +387,7 @@ paths:
         in: path
         required: true
     get:
-      summary: "\bResource CRUD endpoing"
+      summary: 获取视频生成任务文件资源
       tags: []
       responses:
         '200':
@@ -337,9 +395,22 @@ paths:
         '404':
           description: Not Found
       operationId: get-task-task_id-resource
-      description: "下載對應{file_path}的檔案。\n雖可以只加一個檔案名，但強烈建議將上傳的檔案放在 raw_materials 目錄下。\n\nraw_materials 目錄是每一個任務儲存 resource 檔案的地方，為求統一，請盡可能地利用 raw_materials 儲存你上傳的檔案\n\n{file_path} 是以 task 的主目錄為基準，即與 vidpress.ini, news.json and raw_materials 的 directory. \n\n基本應用：\n/task/{task_id}/resource/raw_materials/image1.jpeg\n\n如果 {file_path} 是指向一個目錄，return 404\n\n如果 {file_path} 用了 /../, return 404"
+      description: |-
+        下載對應{file_path}的檔案。
+        雖可以只加一個檔案名，但強烈建議將上傳的檔案放在 raw_materials 目錄下。
+
+        raw_materials 目錄是每一個任務儲存 resource 檔案的地方，為求統一，請盡可能地利用 raw_materials 儲存你上傳的檔案
+
+        {file_path} 是以 task 的主目錄為基準，即與 vidpress.ini, news.json and raw_materials 的 directory. 
+
+        基本應用：
+        /task/{task_id}/resource/raw_materials/image1.jpeg
+
+        如果 {file_path} 是指向一個目錄，return 404
+
+        如果 {file_path} 用了 /../, return 404
     post:
-      summary: ''
+      summary: 上传视频生成任务文件资源
       operationId: post-task-task_id-resource
       responses:
         '201':
@@ -355,7 +426,23 @@ paths:
           description: Not Found
         '409':
           description: Conflict
-      description: "上传文件到task中 到對應{file_path}的位址, 可以指定上传之后的文件名, 返回值为此文件在任务中的 file_path\n\n{file_path} 是以 task 的主目錄為基準，即與 vidpress.ini, news.json and raw_materials 的 directory. \n雖可以只加一個檔案名，但強烈建議將上傳的檔案放在 raw_materials 目錄下。\nraw_materials 目錄是每一個任務儲存 resource 檔案的地方，為求統一，請盡可能地利用 raw_materials 儲存你上傳的檔案\n\n基本應用：\n/task/{task_id}/resource/raw_materials/image2.jpeg # 上傳 file content 到 raw_materials/image2.jpeg 的位址。\n\n同時更新 media.json，下次請求 /task/{task_id}/resource 時，也會包括這檔案。\n\n如果 {file_path} 是指向一個目錄，return 404\n\n如果 {file_path} 是指向一個以建立的檔案，return 409 (conflict)，請使用 PUT 來更新文件\n\n如果 {file_path} 用了 /../, return 404"
+      description: |-
+        上传文件到task中 到對應{file_path}的位址, 可以指定上传之后的文件名, 返回值为此文件在任务中的 file_path
+
+        {file_path} 是以 task 的主目錄為基準，即與 vidpress.ini, news.json and raw_materials 的 directory. 
+        雖可以只加一個檔案名，但強烈建議將上傳的檔案放在 raw_materials 目錄下。
+        raw_materials 目錄是每一個任務儲存 resource 檔案的地方，為求統一，請盡可能地利用 raw_materials 儲存你上傳的檔案
+
+        基本應用：
+        /task/{task_id}/resource/raw_materials/image2.jpeg # 上傳 file content 到 raw_materials/image2.jpeg 的位址。
+
+        同時更新 media.json，下次請求 /task/{task_id}/resource 時，也會包括這檔案。
+
+        如果 {file_path} 是指向一個目錄，return 404
+
+        如果 {file_path} 是指向一個以建立的檔案，return 409 (conflict)，請使用 PUT 來更新文件
+
+        如果 {file_path} 用了 /../, return 404
       parameters:
         - schema: {}
           in: query
@@ -363,7 +450,7 @@ paths:
           description: 文件
           required: true
     delete:
-      summary: ''
+      summary: 删除视频生成任务文件资源
       operationId: delete-task-task_id-resource
       responses:
         '200':
@@ -377,9 +464,16 @@ paths:
                     type: string
         '404':
           description: Not Found
-      description: "刪除已有在 {file_path} 的檔案. \n\n如果 {file_path} 還未存在，return 404\n\n如果 {file_path} 是指向一個目錄，return 404\n\n如果 {file_path} 用了 /../, return 404"
+      description: |-
+        刪除已有在 {file_path} 的檔案. 
+
+        如果 {file_path} 還未存在，return 404
+
+        如果 {file_path} 是指向一個目錄，return 404
+
+        如果 {file_path} 用了 /../, return 404
     put:
-      summary: ''
+      summary: 更新视频生成任务文件资源
       operationId: put-task-task_id-resource-filename
       responses:
         '201':
@@ -393,7 +487,20 @@ paths:
                     type: string
         '404':
           description: Not Found
-      description: "更新已有的 file content. \n\n更新 task 中對應 {file_path} 位址的文件, 返回值为此文件在任务中的 file_path\n\n{file_path} 是以 task 的主目錄為基準，即與 vidpress.ini, news.json and raw_materials 的 directory. \n雖可以只加一個檔案名，但強烈建議將上傳的檔案放在 raw_materials 目錄下。\nraw_materials 目錄是每一個任務儲存 resource 檔案的地方，為求統一，請盡可能地利用 raw_materials 儲存你上傳的檔案\n\n如果 {file_path} 還未存在，將會建立檔案\n\n如果 {file_path} 是指向一個目錄，return 404\n\n如果 {file_path} 用了 /../, return 404"
+      description: |-
+        更新已有的 file content. 
+
+        更新 task 中對應 {file_path} 位址的文件, 返回值为此文件在任务中的 file_path
+
+        {file_path} 是以 task 的主目錄為基準，即與 vidpress.ini, news.json and raw_materials 的 directory. 
+        雖可以只加一個檔案名，但強烈建議將上傳的檔案放在 raw_materials 目錄下。
+        raw_materials 目錄是每一個任務儲存 resource 檔案的地方，為求統一，請盡可能地利用 raw_materials 儲存你上傳的檔案
+
+        如果 {file_path} 還未存在，將會建立檔案
+
+        如果 {file_path} 是指向一個目錄，return 404
+
+        如果 {file_path} 用了 /../, return 404
       parameters:
         - schema: {}
           in: query
@@ -408,7 +515,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: 获取视频生成任务文件资源列表
       tags: []
       responses:
         '200':
@@ -426,7 +533,25 @@ paths:
         '404':
           description: Not Found
       operationId: get-task-task_id-resource
-      description: "返回可用的 resource candidates 列表 (media.json)\n\npossible types: \"video\", \"image\n\n以下為例子\n{\n  \"resource_list\": \n  [\n    {\n      \"type\": \"video\",\n      \"file_path\": \"raw_materials/11e4be2236c446b99b3d20e2f1cc9750.3.jpeg\"\n    },\n    {media2...},\n    {media3...}\n  ]\n}\n\nfile_path 的數值，可以用在 /task/{task_id}/resource/{filename} 這個接口上"
+      description: |-
+        返回可用的 resource candidates 列表 (media.json)
+
+        possible types: "video", "image
+
+        以下為例子
+        {
+          "resource_list": 
+          [
+            {
+              "type": "video",
+              "file_path": "raw_materials/11e4be2236c446b99b3d20e2f1cc9750.3.jpeg"
+            },
+            {media2...},
+            {media3...}
+          ]
+        }
+
+        file_path 的數值，可以用在 /task/{task_id}/resource/{filename} 這個接口上
   '/task/{task_id}/topics':
     parameters:
       - schema:
@@ -435,12 +560,12 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: 获取话题类视频生成任务
       tags: []
       responses: {}
       operationId: get-task-task_id-topics
     post:
-      summary: ''
+      summary: 设定话题类视频生成任务
       operationId: post-task-task_id-topics
       responses:
         '200':
@@ -602,13 +727,13 @@ components:
           example: '3'
         summary:
           type: string
-          description: "provide customized summary. when this field is provided, vidpress's summarization will be disabled for this task"
+          description: 'provide customized summary. when this field is provided, vidpress''s summarization will be disabled for this task'
         image_tag:
           type: string
           example: renminribao-1.0.1
         extra_config:
           type: object
-          example: "{'ALIGNMENT/MAX_SOURCE_CONFIDENCE':4}"
+          example: '{''ALIGNMENT/MAX_SOURCE_CONFIDENCE'':4}'
           description: 'Extra_config, 用於添加自訂義開頭影片, 片尾影片, 台標, 字幕塊等配置。每一個 extra_configs 的 key 必須用 <section>/<option> 的格式配置。'
           properties:
             Video/CUSTOM_TITLE_PATH:
@@ -774,7 +899,7 @@ components:
     Timeline:
       title: Timeline
       type: object
-      description: "对时间轴的描述. 请注意, 此json中client需要关心的就是下面列出来的字段. 在tracks中有type为'audio'的, 请勿更改他们在列表中的顺序. 调整素材顺序的话请只调整type为'video'和'image'的track."
+      description: '对时间轴的描述. 请注意, 此json中client需要关心的就是下面列出来的字段. 在tracks中有type为''audio''的, 请勿更改他们在列表中的顺序. 调整素材顺序的话请只调整type为''video''和''image''的track.'
       properties:
         tracks:
           type: array
@@ -861,7 +986,7 @@ components:
                   type:
                     - string
                     - object
-                  description: "数组成员可以是media url的string, 也可以是{url:'<media url>', expected_duration:<duration in second>}"
+                  description: '数组成员可以是media url的string, 也可以是{url:''<media url>'', expected_duration:<duration in second>}'
                   properties:
                     url:
                       type: string
