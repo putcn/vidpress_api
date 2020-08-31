@@ -954,7 +954,7 @@ components:
           description: 'can be media url, media path, or paragraph text itself'
         image_format:
           type: string
-          description: "optional. \nValid options are [\"jpg\", \"jpeg\", \"png\", 'gif']\n\nimage_format is only \"required\" when the data string is base64 encoded. \n"
+          description: "optional. \nValid options are [\"jpg\", \"jpeg\", \"png\", 'gif']\ndefault is \"jpg\"\n\nimage_format is only \"required and used\" when the data string is base64 encoded. \n"
       required:
         - type
         - data
