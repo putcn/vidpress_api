@@ -698,6 +698,14 @@ components:
         source:
           type: array
           example: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
+          description: |-
+            指定可使用的 media 來源
+            CURRENT_URL：只使用新聞URL 本身帶的圖片
+            CURRENT_URL_HOST：搜索新聞來源的站上，尋找類似的新聞，使用其中的圖片。
+            LIB_Vidpress：使用 Vidpress 本身的素材庫。
+
+            其接收的value 是 list of string, 可用的來源有 "CURRENT_URL", "CURRENT_URL_HOST", "LIB_Vidpress"
+            EX: ["CURRENT_URL”]
           items:
             type: string
         expected_output:
