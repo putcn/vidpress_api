@@ -695,6 +695,28 @@ components:
                 {
                 "Production/CUSTOM_BG_MUSIC_PATH":"https://www.example.com/bg.mp3",
                 }
+            Production/CUSTOM_OVERLAY_PATH:
+              type: string
+              description: |-
+                Overlay
+
+                Vidpress支持自定义一个Overlay，Overlay只会在视频Body里出现，片头片尾都不会拨出Overlay。Overlay会一直自动重复。
+
+                Overly支持alpha channel，可以利用此功能，在视频加上在定义的编框
+
+                Overaly会自动对齐左上角，可以利用Production/CUSTOM_OVERLAY_POS_X和Production/CUSTOM_OVERLAY_POS_Y来调整Overlay的位置。
+
+                使用方法是在extra_config中，提供以下参数
+
+                {
+                "Production/Production/CUSTOM_OVERLAY_PATH"："https://www.example.com/overlay.mov"，
+                }
+            Production/CUSTOM_OVERLAY_POS_X:
+              type: number
+              description: 'CUSTOM_OVERLAY_POS_X为optional,default是0,会指定左方的margin.'
+            Production/CUSTOM_OVERLAY_POS_Y:
+              type: number
+              description: 'CUSTOM_OVERLAY_POS_X为optional,default是0,会指定上方的margin.'
         source:
           type: array
           example: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
@@ -719,6 +741,7 @@ components:
           type: string
         content:
           type: array
+          description: 結構化的新聞輸入
           items:
             $ref: '#/components/schemas/Paragraph'
         resolution:
