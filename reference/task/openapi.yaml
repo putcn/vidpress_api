@@ -739,9 +739,25 @@ components:
           example: video
         title:
           type: string
+          description: |-
+            結構化的新聞輸入
+
+            作為新聞 title
         content:
           type: array
-          description: 結構化的新聞輸入
+          description: |-
+            結構化的新聞輸入
+
+            EX: [
+                {
+                  "type": "image",
+                  "data": "http://www.example.com/caption.jpeg"
+                },
+                {
+                  "type": "text",
+                  "data": "Hello World"
+                }
+              ]
           items:
             $ref: '#/components/schemas/Paragraph'
         resolution:
@@ -976,13 +992,23 @@ components:
         image type:
           type: image
           data: 'http://foo.bar/a.jpg'
+      description: |
+        結構化的新聞輸入中的 paragraph element.
+        每一個 elemtn 可是視為是一個文章段落，或是一個圖片媒體。
       properties:
         type:
           type: string
           default: text
+          description: |-
+            paragraph 的屬性。
+
+            可以為 "image" or "text"
         data:
           type: string
-          description: 'can be media url, media path, or paragraph text itself'
+          description: |-
+            can be media url, media path, or paragraph text itself
+
+            也支持 base64 encoded data string.
         image_format:
           type: string
           description: "optional. \nValid options are [\"jpg\", \"jpeg\", \"png\", 'gif']\ndefault is \"jpg\"\n\nimage_format is only \"required and used\" when the data string is base64 encoded. \n"
