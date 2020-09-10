@@ -316,6 +316,8 @@ paths:
         /timeline 不会再对 timeline 进行任何处理，用户需要确定所有 timeline.json 里提供的档案都已透过 /upload/{filename} 上传过。
 
         /roug_timeline 则是会读取 caption_tracks 里的文字，重新生成 TTS，按照最终 TTS duraiton 微调 media tracks 的 duration. media tracks 里提供的 media_path也可以是 URL，系统会帮助用户下载。
+
+        media tracks 里若提供 'description'，Vidpress 將會創建一個二級頭標，可以利用這個功能加入副標題等功能，會建立一個約 4~10秒的標題在左下角。
   '/task/{task_id}/resource/{file_path}':
     parameters:
       - schema:
@@ -964,6 +966,9 @@ components:
                   type:
                     type: string
                     description: video or image
+                  description:
+                    type: string
+                    description: 二級頭標，會建立一個約 4~10秒的標題在左下角
                 required:
                   - url
                   - type
