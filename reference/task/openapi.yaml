@@ -719,6 +719,29 @@ components:
             Production/CUSTOM_OVERLAY_POS_Y:
               type: number
               description: 'CUSTOM_OVERLAY_POS_X为optional,default是0,会指定上方的margin.'
+            Summarizer/TTS_PAUSE_MARKER:
+              type: string
+              description: |-
+                無聲標記特別字串
+
+                default: #pau#
+
+                TTS 在遇到摘要中的無聲標記特別字串，會短暫的停頓 0.5s (可用 TTS_PAUSE_DURATION 控制停頓時間)，此 marker 也可重複使用，重複幾次就停頓幾次。
+
+                無聲標記特別字串不會出現在字幕中，也不會在語音中出現，可用於希望放慢 TTS 時使用。
+
+                注意：這 config 適用於 custom alignment 和 rough_timeline 接口。透過一般的 news url 或結構化 content 的摘要 module 會把特別字串洗掉，無法保證摘要還會保留特別字串。
+
+                EX: 鸣人#pau#和佐助#pau##pau#在终结之谷
+                以上句子在唸完“鸣人” 之後，會短暫的停頓 0.5s，在唸完“佐助” 之後，會短暫的停頓 1s
+            Summarizer/TTS_PAUSE_DURATION:
+              type: string
+              description: |-
+                無聲停頓
+
+                default: 0.5
+
+                配置無聲標記特別字串短暫的停頓時間
         source:
           type: array
           example: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
@@ -997,9 +1020,13 @@ components:
         image type:
           type: image
           data: 'http://foo.bar/a.jpg'
-      description: |
+      description: |+
         結構化的新聞輸入中的 paragraph element.
         每一個 elemtn 可是視為是一個文章段落，或是一個圖片媒體。
+
+        EX: {"type": "image", "data": "http:www.example.com/caption.jpeg"}
+
+
       properties:
         type:
           type: string
@@ -1014,9 +1041,8 @@ components:
             can be media url, media path, or paragraph text itself
 
             也支持 base64 encoded data string.
-        image_format:
-          type: string
-          description: "optional. \nValid options are [\"jpg\", \"jpeg\", \"png\", 'gif']\ndefault is \"jpg\"\n\nimage_format is only \"required and used\" when the data string is base64 encoded. \n"
+
+            如果使用 base64 data string, Vidpress 會利用 'filetype' 來判斷 media 是使用什麼 extension。
       required:
         - type
         - data
