@@ -770,19 +770,7 @@ components:
             作為新聞 title
         content:
           type: array
-          description: |-
-            結構化的新聞輸入
-
-            EX: [
-                {
-                  "type": "image",
-                  "data": "http://www.example.com/caption.jpeg"
-                },
-                {
-                  "type": "text",
-                  "data": "Hello World"
-                }
-              ]
+          description: "結構化的新聞輸入\n\n輸入是 list of paragraph element.\n每一個 paragraph element 需要指定 type and data. \n每一個 elemtn 可是視為是一個文章段落，或是一個圖片媒體。\n更詳細的解說在 Paragraph ref 中。\n\nEX: [\n    {\n      \"type\": \"image\",\n      \"data\": \"http://www.example.com/caption.jpeg\"\n    },\n    {\n      \"type\": \"text\",\n      \"data\": \"Hello World\"\n    }\n  ]"
           items:
             $ref: '#/components/schemas/Paragraph'
         resolution:
@@ -1020,13 +1008,7 @@ components:
         image type:
           type: image
           data: 'http://foo.bar/a.jpg'
-      description: |+
-        結構化的新聞輸入中的 paragraph element.
-        每一個 elemtn 可是視為是一個文章段落，或是一個圖片媒體。
-
-        EX: {"type": "image", "data": "http:www.example.com/caption.jpeg"}
-
-
+      description: "結構化的新聞輸入中的 paragraph element.\n每一個 paragraph element 需要指定 type and data. \n每一個 elemtn 可是視為是一個文章段落，或是一個圖片媒體。\n\ntype: \"image\" or \"text\" 代表這一個 paragraph 的屬性。\ndata: 這一個 paragraph 的值。可以是一段文字，或是一個圖片的 URL，也可以用 base64 encoded string 來取代 image url.\n\n\nEX: {\"type\": \"image\", \"data\": \"http:www.example.com/caption.jpeg\"}\n\n"
       properties:
         type:
           type: string
