@@ -859,6 +859,15 @@ components:
                   - audio
                   - image
                 example: video
+              description:
+                type: string
+                description: |-
+                  二级头标
+
+                  注意：只会被rough_timeline中被使用，一般的timeline接口会忽略这个数据。
+
+                  依据提供的内容，会建立一个约4~10秒的标题在左下角。
+                  二级头标的文字长度不宜过长。
     Video:
       title: Video
       type: object
@@ -979,7 +988,11 @@ components:
                     description: video or image
                   description:
                     type: string
-                    description: 二級頭標，會建立一個約 4~10秒的標題在左下角
+                    description: |-
+                      二级头标
+
+                      依据提供的内容，会建立一个约4~10秒的标题在左下角。
+                      二级头标的文字长度不宜过长。
                 required:
                   - url
                   - type
