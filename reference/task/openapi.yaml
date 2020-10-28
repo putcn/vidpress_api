@@ -394,6 +394,9 @@ paths:
         /roug_timeline 则是会读取 caption_tracks 里的文字，重新生成 TTS，按照最终 TTS duraiton 微调 media tracks 的 duration. media tracks 里提供的 media_path也可以是 URL，系统会帮助用户下载。
 
         media tracks 里若提供 'description'，Vidpress 將會創建一個二級頭標，可以利用這個功能加入副標題等功能，會建立一個約 4~10秒的標題在左下角。
+
+        注意：由於接口在定義媒體數據時，支持 url 格式，Vidpress 會依據提供的媒體ＵＲＬ去下載，為避免可能的錯誤，Vidpress 必須對資源有所控制，目前會限制用戶在使用
+        自定義對齊數據時，最多只可以提供 80 個 media, 同時每個 media 的大小須小於 20MB (尚未 implement)
   '/task/{task_id}/resource/{file_path}':
     parameters:
       - schema:
@@ -885,6 +888,13 @@ components:
                 default: 0.5
 
                 配置無聲標記特別字串短暫的停頓時間
+            Production/STYLE_THEME:
+              type: string
+              description: |-
+                風格主題設定
+
+                目前支持的只有 "general"
+                設定風格主題可以將開頭，人物誌等生成素材切換成不同的風格，會慢慢支持更多的風格。
         source:
           type: array
           example: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
