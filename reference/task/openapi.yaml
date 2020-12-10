@@ -18,7 +18,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Paged_tasks'
-      description: 返回任务列表.
+      description: 返回用戶全部任务列表.
       parameters:
         - schema:
             type: number
@@ -91,6 +91,11 @@ paths:
 
         跟片头不一样,这里只需要CUSTOM_ENDING_PATH就够了
 
+        注意：片尾默认是使用Vidpress Logo ending video.如果有需要将Vidpress的标签结尾去掉的话，可以传入一个empty string。Vidpress会读取这个配置且不自动加入Vidpress的标签结尾。
+        使用方法
+        {
+        "Production/CUSTOM_ENDING_PATH":"",
+        }
 
         台标
 
@@ -156,7 +161,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      description: 返回task对象.
+      description: '依據 {task_id} 返回一個指定的任務詳情內容.'
     post:
       summary: 重新生成视频
       responses:
@@ -172,7 +177,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      description: 重新生成视频. 请在更新了summary后者timeline之后重新生成视频. 支持跟新task_config来更改任务优先级
+      description: 重新生成指定的 task 视频. 请在更新了summary后者timeline之后重新生成视频. 支持跟新task_config来更改任务优先级
       requestBody:
         content:
           application/json:
