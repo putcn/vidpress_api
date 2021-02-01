@@ -117,14 +117,15 @@ paths:
         Vidpress支持自定义字幕块图片,目前字幕块只支持图片,不支持视频类（包括GIF）,导入后会在下方正中放入字幕块图片,Vidpress不对字幕块图片做任何处理,请确保字幕块的长宽高是符合最终呈现的大小,建议大小约为1280x130上下,字幕块只会在视频Body里出现,片头片尾都不会展现字幕块。
         Vidpress 支持自定义配置字幕的宽度和上下的位置，在需要限制字幕的状况下（像是不希望字幕挡到左右的图片），可以利用CUSTOM_CAPTION_WIDTH来配置字幕里的字的最大宽度，在需要控制字幕上下的位置时，可以利用CUSTOM_CAPTION_BOTTOM_MARGIN来配置字幕的上下位置。
         可以利用'Output/color'来配置字幕的颜色，颜色的格式支持HEX color code.EX: '#FF0022'
-
+        可以利用'Output/font'来配置字幕的字体, EX: {'Output/font': 'ArialUnicode'}
         使用方法是在extra_config中,提供以下参数
 
         {
         "Production/CUSTOM_CAPTION_BG_PATH":"https://www.example.com/cap_bg.png",
         "Production/CUSTOM_CAPTION_WIDTH": 846,
         "Production/CUSTOM_CAPTION_BOTTOM_MARGIN": 20,
-        "Output/color": '#FF0022'
+        "Output/color": '#FF0022',
+        'Output/font': 'ArialUnicode'
         }
 
         背景音乐
