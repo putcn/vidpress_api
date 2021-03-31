@@ -613,7 +613,7 @@ paths:
               $ref: '#/components/schemas/Topic'
   /wordseg:
     get:
-      summary: Your GET endpoint
+      summary: 字幕分句
       tags: []
       responses:
         '200':
