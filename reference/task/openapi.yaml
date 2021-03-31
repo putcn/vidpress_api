@@ -611,6 +611,48 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Topic'
+  /wordseg:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type:
+                      - string
+                      - array
+                    items:
+                      type: string
+      operationId: get-wordseg
+      description: |
+        輸入一段句子，提供分詞
+        ＥＸ：
+        text = '据《印度快报》《今日印度》等媒体24日报道，曾主演《三傻大闹宝莱坞》的印度知名演员',
+
+        {'result': ['据印度快报今日印度等媒体24日报道，', '曾主演三傻大闹宝莱坞的印度知名演员']}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: 需要分段詞的句子。
+                width:
+                  type: integer
+                  description: 預估的影片寬度
+                font_size:
+                  type: integer
+                  description: 預估的字體大小
+              required:
+                - text
 components:
   schemas:
     Error:
