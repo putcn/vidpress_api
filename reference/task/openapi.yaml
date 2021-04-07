@@ -409,6 +409,15 @@ paths:
 
         注意：由於接口在定義媒體數據時，支持 url 格式，Vidpress 會依據提供的媒體ＵＲＬ去下載，為避免可能的錯誤，Vidpress 必須對資源有所控制，目前會限制用戶在使用
         自定義對齊數據時，最多只可以提供 80 個 media, 同時每個 media 的大小須小於 20MB (尚未 implement)
+
+        可以添加 custom_info field 來自定義轉場
+        "custom_info": {
+                            "transition": {
+                                "duration": 1,
+                                "type": "push",
+                                "direction": "right"
+                            }
+                        },
   '/task/{task_id}/resource/{file_path}':
     parameters:
       - schema:
