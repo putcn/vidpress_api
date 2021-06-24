@@ -115,10 +115,17 @@ paths:
         字幕块
 
         Vidpress支持自定义字幕块图片,目前字幕块只支持图片,不支持视频类（包括GIF）,导入后会在下方正中放入字幕块图片,Vidpress不对字幕块图片做任何处理,请确保字幕块的长宽高是符合最终呈现的大小,建议大小约为1280x130上下,字幕块只会在视频Body里出现,片头片尾都不会展现字幕块。
+        Vidpress 支持自定义配置字幕的宽度和上下的位置，在需要限制字幕的状况下（像是不希望字幕挡到左右的图片），可以利用CUSTOM_CAPTION_WIDTH来配置字幕里的字的最大宽度，在需要控制字幕上下的位置时，可以利用CUSTOM_CAPTION_BOTTOM_MARGIN来配置字幕的上下位置。
+        可以利用'Output/color'来配置字幕的颜色，颜色的格式支持HEX color code.EX: '#FF0022'
+        可以利用'Output/font'来配置字幕的字体, EX: {'Output/font': 'ArialUnicode'}
         使用方法是在extra_config中,提供以下参数
 
         {
         "Production/CUSTOM_CAPTION_BG_PATH":"https://www.example.com/cap_bg.png",
+        "Production/CUSTOM_CAPTION_WIDTH": 846,
+        "Production/CUSTOM_CAPTION_BOTTOM_MARGIN": 20,
+        "Output/color": '#FF0022',
+        'Output/font': 'ArialUnicode'
         }
 
         背景音乐
@@ -402,6 +409,15 @@ paths:
 
         注意：由於接口在定義媒體數據時，支持 url 格式，Vidpress 會依據提供的媒體ＵＲＬ去下載，為避免可能的錯誤，Vidpress 必須對資源有所控制，目前會限制用戶在使用
         自定義對齊數據時，最多只可以提供 80 個 media, 同時每個 media 的大小須小於 20MB (尚未 implement)
+
+        可以添加 custom_info field 來自定義轉場
+        "custom_info": {
+                            "transition": {
+                                "duration": 1,
+                                "type": "push",
+                                "direction": "right"
+                            }
+                        },
   '/task/{task_id}/resource/{file_path}':
     parameters:
       - schema:
@@ -604,6 +620,48 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Topic'
+  /wordseg:
+    get:
+      summary: 字幕分句
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type:
+                      - string
+                      - array
+                    items:
+                      type: string
+      operationId: get-wordseg
+      description: |
+        輸入一段句子，提供分詞
+        ＥＸ：
+        text = '据《印度快报》《今日印度》等媒体24日报道，曾主演《三傻大闹宝莱坞》的印度知名演员',
+
+        {'result': ['据印度快报今日印度等媒体24日报道，', '曾主演三傻大闹宝莱坞的印度知名演员']}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: 需要分段詞的句子。
+                width:
+                  type: integer
+                  description: 預估的影片寬度
+                font_size:
+                  type: integer
+                  description: 預估的字體大小
+              required:
+                - text
 components:
   schemas:
     Error:
