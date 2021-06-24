@@ -900,6 +900,9 @@ components:
 
                 目前支持的只有 "general"
                 設定風格主題可以將開頭，人物誌等生成素材切換成不同的風格，會慢慢支持更多的風格。
+            AIService/TTS_SPEED:
+              type: number
+              description: 'TTS语音速度, 单位: 字/秒, 默认值: 5'
         source:
           type: array
           example: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
