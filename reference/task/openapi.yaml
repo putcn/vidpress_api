@@ -178,6 +178,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
+              examples:
+                example-1:
+                  value:
+                    id: 0
+                    config:
+                      news_url: string
+                      tts_per: 0
+                      duration: 0
+                      callback_url: 'http://example.com'
+                      priority: '3'
+                      summary: string
+                      image_tag: renminribao-1.0.1
+                      extra_config: '{''ALIGNMENT/MAX_SOURCE_CONFIDENCE'':4}'
+                      source: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
+                      expected_output: video
+                      title: string
+                      content:
+                        - type: text
+                          data: string
+                      resolution: string
+                    status: null
+                    estimation:
+                      start_time: 0
+                      finish_time: 0
+                    progress:
+                      - percentage: 0
+                        message: string
+                        task_id: 0
+                        status: waiting
+                    result: null
+                    error: null
+                    production_report: null
         '404':
           description: 任务未找到
           content:
@@ -190,6 +222,24 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Task_config'
+            examples:
+              example-1:
+                value:
+                  news_url: string
+                  tts_per: 0
+                  duration: 0
+                  callback_url: 'http://example.com'
+                  priority: '3'
+                  summary: string
+                  image_tag: renminribao-1.0.1
+                  extra_config: '{''ALIGNMENT/MAX_SOURCE_CONFIDENCE'':4}'
+                  source: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
+                  expected_output: video
+                  title: string
+                  content:
+                    - type: text
+                      data: string
+                  resolution: string
     delete:
       summary: 终止视频生成任务
       responses:
@@ -344,11 +394,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Alignment'
+              examples:
+                example-1:
+                  value:
+                    alignment:
+                      - text: string
+                        media:
+                          - null
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Alignment'
+            examples:
+              example-1:
+                value:
+                  alignment:
+                    - text: string
+                      media:
+                        - null
       description: '设定图片和文字对齐数据. 注意, 上传此项将覆盖自动媒体查找和对齐过程, 完全手动设定文字和媒体. media path可以是已经上传完成的文件路径(相对), 或者URL'
     delete:
       summary: 删除手动对齐数据
@@ -620,6 +684,32 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Topic'
+
+  '/task/{task_id}/ppt_alignment':
+    parameters:
+      - schema:
+          type: string
+        name: task_id
+        in: path
+        required: true
+    post:
+      summary: 上传PPT文件资源
+      operationId: post-task-task_id-ppt_alignment
+      responses:
+        '201':
+          description: Created
+      description: |-
+        提供带有备注的PPT文件，服务器将会提取每一页的备注去生成语音解说词，然后与每一页的画面对齐后，转化成一个mp4视频文件。     
+
+        PPT文件必须满足以下三个条件：（1）文件以.pptx结尾；（2）每一页的幻灯片必须添加备注；（3）文件大小不能超过50M；    
+
+        该接口的使用方式与/task/{task_id}/alignment与/task/{task_id}/rough_timeline的使用方式类似，需要先调用/task接口创建空的vidpress任务，然后用返回的task_id去调用/task/{task_id}/ppt_alignment。创建空任务的响应时间和普通的创建时间没有区间，上传PPT文件的响应时间会受到PPT文件大小以及网速的影响。
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: file
+          description: 本地PPT文件路径
   /wordseg:
     get:
       summary: 字幕分句
@@ -662,6 +752,7 @@ paths:
                   description: 預估的字體大小
               required:
                 - text
+
 components:
   schemas:
     Error:
