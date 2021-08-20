@@ -80,6 +80,9 @@ paths:
         }
         请注意这两个参数需要一起导入,不然开头会无法正确播放。这个是由于一些legacy issue,导致我们不直接采用视频的长度,目前希望能在下一版本修复。
 
+        目前Vidpress提供四种不同的片头，分为通用，财经，娱乐，与体育，根据文章的种类，Vidpress会自行选用适当的风格，如果有需要特地选用某一个风格的话，可透过更改
+        'Production/STYLE_THEME'来控制，选项有 ['entertainment', 'sports', 'finance', 'general']
+
         片尾视频
 
         Vidpress支持自定义片尾视频,提供的视频会在最后播放,片尾视频播放时,会同时播放片尾视频自带的音乐,背景音乐会在播放片尾视频前fadeout.
@@ -684,7 +687,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Topic'
-
   '/task/{task_id}/ppt_alignment':
     parameters:
       - schema:
@@ -752,7 +754,6 @@ paths:
                   description: 預估的字體大小
               required:
                 - text
-
 components:
   schemas:
     Error:
