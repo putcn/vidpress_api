@@ -706,12 +706,19 @@ paths:
         PPT文件必须满足以下三个条件：（1）文件以.pptx结尾；（2）每一页的幻灯片必须添加备注；（3）文件大小不能超过50M；    
 
         该接口的使用方式与/task/{task_id}/alignment与/task/{task_id}/rough_timeline的使用方式类似，需要先调用/task接口创建空的vidpress任务，然后用返回的task_id去调用/task/{task_id}/ppt_alignment。创建空任务的响应时间和普通的创建时间没有区间，上传PPT文件的响应时间会受到PPT文件大小以及网速的影响。
+
+        可接受本地ppt文件路径或者ppt下载地址两种参数作为输入，正常请求返回201。如果两个参数都缺失或者两个参数都包含，请求会返回400。
       parameters:
         - schema:
             type: string
           in: query
           name: file
           description: 本地PPT文件路径
+        - schema:
+            type: string
+          in: query
+          name: ppt_url
+          description: PPT文件的公网下载地址
   /wordseg:
     get:
       summary: 字幕分句
