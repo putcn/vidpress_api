@@ -1463,7 +1463,7 @@ components:
                   description: 媒体素材链接。
             media_left:
               type: object
-              description: '早报封面页的主图，图片展示尺寸为5:4。'
+              description: '早报封面页的左侧附图，图片展示尺寸为5:4。'
               required:
                 - type
                 - url
@@ -1481,7 +1481,7 @@ components:
                   description: 媒体素材链接。
             media_right:
               type: object
-              description: '早报封面页的主图，图片展示尺寸为5:4。'
+              description: '早报封面页的右侧附图，图片展示尺寸为5:4。'
               required:
                 - type
                 - url
@@ -1524,31 +1524,21 @@ components:
       type: object
       x-examples:
         example-1:
-          template: news
-          duration: 10
-          title: ''
-          news_content: ''
-          template_data:
-            title: 一度暴涨18% 拼多多最新财报出炉！
-            news_category: 重磅新闻
-            date: 21.08.24 Tue.
-            text: 北京时间8月24日晚间，拼多多发布了2021年第二季度财报，二季度营收230亿元、同比增长89%，不及市场预期的267亿；在运营利润、净利润表现上，拼多多当季均扭亏为盈。新任拼多多“掌门人”陈磊，继上一季度财报分析会上谈农业科技、关注人类未来食品蛋白替代之后，再次把眼光放在农业上。据了解，涉农产品成为拼多多平台增长最快的品类。今年上半年，拼多多农产品订单量同比增长431%，单品销量超过10万单的农产品超过4000款，同比增长超过490%；单品销量超过100万单的农产品达到30余款；自“百亿补贴”上线以来，优质涉农商家已突破1万家，并累计上线超2万款农产品。
-            media:
-              - type: image
-                url: 'https://pics5.baidu.com/feed/5882b2b7d0a20cf4da5cea0c145f483faeaf99f0.jpeg?token=e89d1b46b2e5dbd2a0dbc2e1f609b520'
-                reusable: true
-              - type: image
-                url: 'http://5b0988e595225.cdn.sohucs.com/images/20180803/0ace3549bf2a44aabdcb53dcbded9877.jpeg'
-                reusable: true
-              - type: image
-                url: 'http://n.sinaimg.cn/tech/transform/118/w550h368/20210806/eb2a-e5134322be1faf2b36a896b14351b25e.png'
-                reusable: true
-              - type: image
-                url: 'http://image.nbd.com.cn/uploads/articles/images/958839/001-004.jpg'
-                reusable: true
-            logo:
-              type: image
-              url: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
+          value:
+            template: news
+            duration: 10
+            template_data:
+              title: 一度暴涨18% 拼多多最新财报出炉！
+              news_category: 重磅新闻
+              date: 21.04.17 Sun.
+              text: 北京时间8月24日晚间，拼多多发布了2021年第二季度财报，二季度营收230亿元、同比增长89%，不及市场预期的267亿。\n在运营利润、净利润表现上，拼多多当季均扭亏为盈。
+              media:
+                - type: image
+                  url: 'http://n.sinaimg.cn/tech/transform/118/w550h368/20210806/eb2a-e5134322be1faf2b36a896b14351b25e.png'
+                  reusable: true
+              logo:
+                type: image
+                url: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
       title: ''
       properties:
         template:
