@@ -1437,8 +1437,8 @@ components:
             title:
               type: string
               description: 早报封面页的标题文案。最多不能超过34个汉字（包括标点）的长度，超出部分会被自动截断。
-              maxLength: 38
-              minLength: 1
+              maxLength: 34
+              minLength: 0
             date:
               type: string
               description: |-
@@ -1582,9 +1582,10 @@ components:
           properties:
             title:
               type: string
-              minLength: 1
-              description: 早报新闻页的标题。不得超过18个汉字（包括标点）的长度，超出部分会被自动截断。
+              description: 早报新闻页的标题。不得超过16个汉字（包括标点）的长度，超出部分会被自动截断。
               example: 一度暴涨18% 拼多多最新财报出炉！
+              maxLength: 16
+              minLength: 0
             news_category:
               type: string
               minLength: 1
