@@ -1416,12 +1416,11 @@ components:
           description: 早报封面页模版名称。
           enum:
             - intro
+          example: intro
         duration:
           type: number
           description: 模版视频时长。
-          exclusiveMinimum: false
-          exclusiveMaximum: false
-          default: 10
+          example: 5
         template_data:
           type: object
           description: 当前模版所需要的结构化数据。
@@ -1592,7 +1591,7 @@ components:
               example: 21.04.17 Sun.
             text:
               type: string
-              description: 新闻正文，无字数限制，段落间用"\n"符分隔。
+              description: 新闻正文，无字数限制。段落间可用"\n"符做分隔，被分隔出来的段落会在单独在新的页面中展示。如果段落字数超过了页面可展示的长度，则会自动做翻页处理，在新的页面中展示剩余内容。
               example: 北京时间8月24日晚间，拼多多发布了2021年第二季度财报，二季度营收230亿元、同比增长89%，不及市场预期的267亿。\n在运营利润、净利润表现上，拼多多当季均扭亏为盈。
             media:
               type: array
