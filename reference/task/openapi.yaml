@@ -1385,4 +1385,165 @@ components:
       required:
         - type
         - data
+    ZS_intro_page:
+      description: 招商银行财经早报中的介绍页
+      type: object
+      x-examples:
+        输入示例:
+          template: news
+          duration: 10
+          title: ''
+          news_content: ''
+          template_data:
+            title: 一度暴涨18% 拼多多最新财报出炉！
+            news_category: 重磅新闻
+            date: 21.08.24 Tue.
+            text: 北京时间8月24日晚间，拼多多发布了2021年第二季度财报，二季度营收230亿元、同比增长89%，不及市场预期的267亿；在运营利润、净利润表现上，拼多多当季均扭亏为盈。新任拼多多“掌门人”陈磊，继上一季度财报分析会上谈农业科技、关注人类未来食品蛋白替代之后，再次把眼光放在农业上。据了解，涉农产品成为拼多多平台增长最快的品类。今年上半年，拼多多农产品订单量同比增长431%，单品销量超过10万单的农产品超过4000款，同比增长超过490%；单品销量超过100万单的农产品达到30余款；自“百亿补贴”上线以来，优质涉农商家已突破1万家，并累计上线超2万款农产品。
+            media:
+              - type: image
+                url: 'https://pics5.baidu.com/feed/5882b2b7d0a20cf4da5cea0c145f483faeaf99f0.jpeg?token=e89d1b46b2e5dbd2a0dbc2e1f609b520'
+                reusable: true
+              - type: image
+                url: 'http://5b0988e595225.cdn.sohucs.com/images/20180803/0ace3549bf2a44aabdcb53dcbded9877.jpeg'
+                reusable: true
+              - type: image
+                url: 'http://n.sinaimg.cn/tech/transform/118/w550h368/20210806/eb2a-e5134322be1faf2b36a896b14351b25e.png'
+                reusable: true
+              - type: image
+                url: 'http://image.nbd.com.cn/uploads/articles/images/958839/001-004.jpg'
+                reusable: true
+            logo:
+              type: image
+              url: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
+          value:
+            template: intro
+            duration: 5
+            template_data:
+              title: 见证历史！深市两版合并正式实施，超20万亿板块起航，市场影响几何？
+              date: 21.04.07 Wed.
+              media_center:
+                type: image
+                url: 'http://www.langxiaozhi.com.cn:7080/public/image/9bd48732c8af1a5709f5c4abe0b4f601.png'
+              media_left:
+                type: image
+                url: 'http://www.langxiaozhi.com.cn:7080/public/image/9bd48732c8af1a5709f5c4abe0b4f601.png'
+              media_right:
+                type: image
+                url: 'http://www.langxiaozhi.com.cn:7080/public/image/9bd48732c8af1a5709f5c4abe0b4f601.png'
+              logo:
+                type: image
+                url: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
+      title: ''
+      x-internal: false
+      properties:
+        template:
+          type: string
+          minLength: 1
+          description: |-
+            模版名称。招行财经早报所支持的模版有：
+            1. "intro" 介绍页
+            2. "news" 新闻页
+            3. "stock_view" 股票信息页
+          enum:
+            - intro
+            - news
+            - stock_view
+        duration:
+          type: number
+          description: |-
+            模版视频时长。
+            注意： 如果模版中包括TTS，且TTS时长大于设定的模版视频时长，则会使用TTS时长作为模版视频的总时长。
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 300
+          exclusiveMaximum: false
+          format: float
+          default: 10
+        template_data:
+          type: object
+          required:
+            - title
+            - date
+            - media_center
+            - media_left
+            - media_right
+            - logo
+          properties:
+            title:
+              type: string
+              minLength: 1
+              description: 早报封面页的标题文案。最多不能超过38个汉字（包括标点）的长度。
+              maxLength: 38
+            date:
+              type: string
+              minLength: 1
+              description: |-
+                早报日期。格式为： 年年-月月-日日 星期
+                例如 21.04.17 Sun.
+            media_center:
+              type: object
+              required:
+                - type
+                - url
+              description: '早报封面页的主图。图片尺寸为5:4'
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - image
+                    - video
+                  example: image
+                url:
+                  type: string
+            media_left:
+              type: object
+              required:
+                - type
+                - url
+              description: '早报封面页的左侧附图。图片尺寸为5:4。'
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - image
+                    - video
+                  example: image
+                url:
+                  type: string
+            media_right:
+              type: object
+              required:
+                - type
+                - url
+              description: '早报封面页的右侧附图。图片尺寸为5:4'
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - image
+                    - video
+                  example: image
+                url:
+                  type: string
+            logo:
+              type: object
+              description: 早报的Logo图案。图形大小需为300x60。
+              required:
+                - type
+                - url
+              properties:
+                type:
+                  type: string
+                  minLength: 1
+                  enum:
+                    - image
+                    - video
+                  example: image
+                url:
+                  type: string
+                  minLength: 1
+      required:
+        - template
+        - duration
+        - template_data
   securitySchemes: {}
