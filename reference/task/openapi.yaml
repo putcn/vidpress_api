@@ -1421,7 +1421,6 @@ components:
           description: 模版视频时长。
           exclusiveMinimum: false
           exclusiveMaximum: false
-          format: float
           default: 10
         template_data:
           type: object
@@ -1515,7 +1514,6 @@ components:
                   description: 早报logo类型，可选类型为image和video。
                 url:
                   type: string
-                  minLength: 1
                   example: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
                   description: logo链接。
       required:
@@ -1556,7 +1554,6 @@ components:
       properties:
         template:
           type: string
-          minLength: 1
           enum:
             - news
           example: news
@@ -1566,8 +1563,7 @@ components:
           description: |-
             模版视频时长。
             注意： 如果模版中包括TTS，且TTS时长大于设定的模版视频时长，则会使用TTS时长作为模版视频的总时长。
-          minimum: 0
-          exclusiveMinimum: true
+          exclusiveMinimum: false
           example: 10
         template_data:
           type: object
@@ -1588,17 +1584,14 @@ components:
               minLength: 0
             news_category:
               type: string
-              minLength: 1
               description: 当前新闻的标签，不超过4个汉字。
               example: 重磅新闻
             date:
               type: string
-              minLength: 1
               description: "早报日期。格式为： 年年-月月-日日 星期\n例如 21.04.17 Sun.\_\_"
               example: 21.04.17 Sun.
             text:
               type: string
-              minLength: 1
               description: 新闻正文，无字数限制，段落间用"\n"符分隔。
               example: 北京时间8月24日晚间，拼多多发布了2021年第二季度财报，二季度营收230亿元、同比增长89%，不及市场预期的267亿。\n在运营利润、净利润表现上，拼多多当季均扭亏为盈。
             media:
@@ -1611,7 +1604,6 @@ components:
                 properties:
                   type:
                     type: string
-                    minLength: 1
                     enum:
                       - image
                       - video
@@ -1619,7 +1611,6 @@ components:
                     description: 媒体素材类型，可选类型为image和video。
                   url:
                     type: string
-                    minLength: 1
                     example: 'http://n.sinaimg.cn/tech/transform/118/w550h368/20210806/eb2a-e5134322be1faf2b36a896b14351b25e.png'
                     description: 媒体素材链接。
                   reusable:
@@ -1638,7 +1629,6 @@ components:
               properties:
                 type:
                   type: string
-                  minLength: 1
                   enum:
                     - image
                     - video
@@ -1646,7 +1636,6 @@ components:
                   description: 早报logo类型，可选类型为image和video。
                 url:
                   type: string
-                  minLength: 1
                   example: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
                   description: logo链接。
       required:
@@ -1678,7 +1667,6 @@ components:
       properties:
         template:
           type: string
-          minLength: 1
           description: 早报股市信息页的模版名称。
           enum:
             - stock_view
@@ -1691,20 +1679,18 @@ components:
           example: 10
         template_data:
           type: object
+          description: 当前模版所需要的结构化数据。
           required:
             - news_category
             - market_close_date
             - stock_info
-          description: 当前模版所需要的结构化数据。
           properties:
             news_category:
               type: string
-              minLength: 1
               description: 当前新闻的标签，不超过4个汉字。
               example: 股市收盘
             market_close_date:
               type: string
-              minLength: 1
               description: 交易日日期，格式为：年年年年.月月.日日 例如：2021.04.06。
               example: 2021.04.06
             stock_info:
@@ -1717,22 +1703,18 @@ components:
                 properties:
                   name:
                     type: string
-                    minLength: 1
                     description: 股票名称。
                     example: 沪指
                   close_price:
                     type: string
-                    minLength: 1
                     description: 收盘价。
                     example: '3482.97'
                   percentage_change:
                     type: string
-                    minLength: 1
                     description: 与前一个交易日收盘价相比的变化百分比。
                     example: 0.04%
                   trend:
                     type: string
-                    minLength: 1
                     description: 价格变化趋势。
                     enum:
                       - upward
