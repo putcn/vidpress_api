@@ -761,6 +761,65 @@ paths:
                   description: 預估的字體大小
               required:
                 - text
+  '/task/{task_id}/template_video':
+    parameters:
+      - schema:
+          type: string
+        name: task_id
+        in: path
+        required: true
+        description: template vidpress task id
+    post:
+      summary: 上传模版视频的结构化数据资源
+      operationId: post-task-task_id-template_video
+      responses:
+        '200':
+          description: OK
+      description: |
+        提供模版化视频生成所需要的结构化数据。 结构化数据的构造为list of dictionary，每个dictonary对应制作一个模版视频片段所用到的参数，例：
+        ```
+        　[
+        　  {"theme": "zs_zaobao",
+        　   "template": "cover",
+        　   "duration": 5,
+        　   "template_data": {...}},
+        　  {"theme": "zs_zaobao",
+        　   "template": "news",
+        　   "duration": 10,
+        　   "template_data": {...}}
+        　]
+        ```
+
+        **招行财经早报**
+
+        三类模版视频的参数输入规范：
+
+        1. [cover page](openapi.yaml/components/schemas/ZS_intro_page)
+        2. [news page](openapi.yaml/components/schemas/ZS_news_page)
+        3. [stock view page](openapi.yaml/components/schemas/ZS_stock_view_page)
+
+        注意：模版vidpress会按照结构化数据中每个模版数据在列表中的先后顺序去整合和播放最终的模版视频。
+
+        该接口的使用方式与/task/{task_id}/alignment与/task/{task_id}/rough_timeline的使用方式类似，需要先调用/task接口创建空的template vidpress任务，然后用返回的task_id去调用/task/{task_id}/template_video。
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+            examples:
+              example-1:
+                value: {}
+        description: ''
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: file
+          description: 本地template alignment json文件地址
 components:
   schemas:
     Error:
@@ -1411,6 +1470,12 @@ components:
       title: ''
       x-internal: false
       properties:
+        theme:
+          type: string
+          enum:
+            - zs_zaobao
+          example: zs_zaobao
+          description: 模版主题名称，必须填写为"zs_zaobao"。
         template:
           type: string
           description: 早报封面页模版名称。
@@ -1516,6 +1581,7 @@ components:
                   example: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
                   description: logo链接。
       required:
+        - theme
         - template
         - duration
         - template_data
@@ -1541,6 +1607,12 @@ components:
                 url: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
       title: ''
       properties:
+        theme:
+          type: string
+          description: 模版主题名称，必须填写为"zs_zaobao"。
+          enum:
+            - zs_zaobao
+          example: zs_zaobao
         template:
           type: string
           enum:
@@ -1628,6 +1700,7 @@ components:
                   example: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
                   description: logo链接。
       required:
+        - theme
         - template
         - duration
         - template_data
@@ -1654,6 +1727,12 @@ components:
                 trend: downward
       title: ''
       properties:
+        '':
+          type: string
+          description: 模版主题名称，必须填写为"zs_zaobao"。
+          enum:
+            - zs_zaobao
+          example: zs_zaobao
         template:
           type: string
           description: 早报股市信息页的模版名称。
@@ -1718,4 +1797,204 @@ components:
         - template
         - duration
         - template_data
+    Template_task_config:
+      title: Template_task_config
+      type: object
+      description: 视频生成任务参数
+      x-examples:
+        配置 example:
+          news_url: 'http://baijiahao.baidu.com/s?id=1665004266650805432'
+          tts_per: '4106'
+          duration: '120'
+          priority: 3
+          extra_config:
+            Video/CUSTOM_TITLE_PATH: 'https://video-generation-background-audio.s3-us-west-1.amazonaws.com/intro.mov'
+            Production/CUSTOM_ENDING_PATH: 'https://video-generation-background-audio.s3-us-west-1.amazonaws.com/outro.mov'
+            Production/CUSTOM_BG_MUSIC_PATH: 'https://s3-us-west-1.amazonaws.com/video-generation-background-audio/汽车.mp3'
+            Production/CUSTOM_LOGO_PATH: 'http://www.baidu.com/img/baidu_resultlogo@2.png'
+            Production/LOGO_MARGIN: '20'
+            Production/LOGO_POS: top-left
+            DEFAULT/TITLE_DURATION: 4
+      properties:
+        tts_per:
+          type: integer
+          description: '发音人代码, 0: 度小美, 1: 度小宇, 3: 度逍遥, 4: 度丫丫, 100: 度小雯(鸽子), 106: 度博文, 103: 度米朵. 默认值为100'
+        callback_url:
+          type: string
+          description: 任务有progress时候的callback url
+          format: uri
+        priority:
+          type: number
+          default: 3
+          description: '任务优先级, 3为普通优先级, 2为高优先级. 原则上支持1和0, 若非必要请勿占用. '
+          enum:
+            - 2
+            - 3
+          example: '3'
+        image_tag:
+          type: string
+          example: renminribao-1.0.1
+          description: 模版视频制作任务所使用到的服务版本号。
+        expected_output:
+          type: string
+          enum:
+            - video
+          example: video
+        resolution:
+          type: string
+          description: |-
+            Type: String
+            Default 1280x720
+
+            Resolution should follow [width]x[height] format
+            EX: 640x360, 或是 1280x720
+        structured_data:
+          type: object
+        extra_config:
+          type: object
+          example: '{''ALIGNMENT/MAX_SOURCE_CONFIDENCE'':4}'
+          description: 'Extra_config, 用於添加自訂義開頭影片, 片尾影片, 台標, 字幕塊等配置。每一個 extra_configs 的 key 必須用 <section>/<option> 的格式配置。'
+          properties:
+            Video/CUSTOM_TITLE_PATH:
+              type: string
+              description: |
+                开头视频
+
+                Vidpress支持自定义开头视频,使用方法是在extra_config中,提供以下两个参数
+
+                {
+                "Video/CUSTOM_TITLE_PATH":"https://www.example.com/intro.mov",
+                "DEFAULT/TITLE_DURATION":3
+                }
+
+                请注意这两个参数需要一起导入,不然开头会无法正确播放。这个是由于一些legacy issue,导致我们不直接采用视频的长度,目前希望能在下一版本修复。
+            DEFAULT/TITLE_DURATION:
+              type: number
+              description: |
+                开头视频
+
+                Vidpress支持自定义开头视频,使用方法是在extra_config中,提供以下两个参数
+
+                {
+                "Video/CUSTOM_TITLE_PATH":"https://www.example.com/intro.mov",
+                "DEFAULT/TITLE_DURATION":3
+                }
+
+                请注意这两个参数需要一起导入,不然开头会无法正确播放。这个是由于一些legacy issue,导致我们不直接采用视频的长度,目前希望能在下一版本修复。
+            Production/CUSTOM_ENDING_PATH:
+              type: string
+              description: |-
+                片尾视频
+
+                Vidpress支持自定义片尾视频,提供的视频会在最后播放,片尾视频播放时,会同时播放片尾视频自带的音乐,背景音乐会在播放片尾视频前fadeout.
+                使用方法是在extra_config中,提供以下参数
+
+                {
+                "Production/CUSTOM_ENDING_PATH":"https://www.example.com/outro.mov",
+                }
+
+                跟片头不一样,这里只需要CUSTOM_ENDING_PATH就够了
+            Production/CUSTOM_LOGO_PATH:
+              type: string
+              description: |-
+                台标
+
+                Vidpress支持自定义台标图片,目前台标只支持图片,不支持视频类（包括GIF）,导入后会在左上或右上放入台标图片,台标只会在视频Body里出现,片头片尾都不会展现台标。
+
+                使用方法是在extra_config中,提供以下参数
+
+                {
+                "Production/CUSTOM_LOGO_PATH":"http://www.example.com/baidu.png",
+                "Production/LOGO_MARGIN":"20",
+                "Production/LOGO_POS":"top-left",
+                }
+
+                LOGO_MARGIN为optional,default是0,会同时指定上方和左右的margin.如果需要呈现上方和左右是不同数值的margin,请更改台标图片,将margin内崁到图里。
+
+                LOGO_POS为optional,可用的数值为["top-left","top-right"],default是top-left。
+            Production/LOGO_MARGIN:
+              type: number
+              description: 'LOGO_MARGIN为optional,default是0,会同时指定上方和左右的margin.如果需要呈现上方和左右是不同数值的margin,请更改台标图片,将margin内崁到图里。'
+            Production/LOGO_POS:
+              type: string
+              description: 'LOGO_POS为optional,可用的数值为["top-left","top-right"],default是top-left。'
+            Production/CUSTOM_CAPTION_BG_PATH:
+              type: string
+              description: |-
+                字幕块
+                Vidpress 支持自定义字幕块图片,目前字幕块只支持图片,不支持视频类（包括GIF）,导入后会在下方正中放入字幕块图片,Vidpress 不对字幕块图片做任何处理,请确保字幕块的长宽高是符合最终呈现的大小,建议大小约为1280x130上下,字幕块只会在视频Body里出现,片头片尾都不会展现字幕块。
+                使用方法是在extra_config中,提供以下参数
+
+                {
+                "Production/CUSTOM_CAPTION_BG_PATH":"https://www.example.com/cap_bg.png",
+                }
+            Production/CUSTOM_BG_MUSIC_PATH:
+              type: string
+              description: |-
+                背景音乐
+
+                Vidpress支持自定义背景音乐,背景音乐只会在视频Body里出现,片头片尾都不会拨出背景音乐。如果背景音乐的长度不够视频的长度,会自动重复歌曲。
+                使用方法是在extra_config中,提供以下参数
+
+                {
+                "Production/CUSTOM_BG_MUSIC_PATH":"https://www.example.com/bg.mp3",
+                }
+            Production/CUSTOM_OVERLAY_PATH:
+              type: string
+              description: |-
+                Overlay
+
+                Vidpress支持自定义一个Overlay，Overlay只会在视频Body里出现，片头片尾都不会拨出Overlay。Overlay会一直自动重复。
+
+                Overly支持alpha channel，可以利用此功能，在视频加上在定义的编框
+
+                Overaly会自动对齐左上角，可以利用Production/CUSTOM_OVERLAY_POS_X和Production/CUSTOM_OVERLAY_POS_Y来调整Overlay的位置。
+
+                使用方法是在extra_config中，提供以下参数
+
+                {
+                "Production/Production/CUSTOM_OVERLAY_PATH"："https://www.example.com/overlay.mov"，
+                }
+            Production/CUSTOM_OVERLAY_POS_X:
+              type: number
+              description: 'CUSTOM_OVERLAY_POS_X为optional,default是0,会指定左方的margin.'
+            Production/CUSTOM_OVERLAY_POS_Y:
+              type: number
+              description: 'CUSTOM_OVERLAY_POS_X为optional,default是0,会指定上方的margin.'
+            Summarizer/TTS_PAUSE_MARKER:
+              type: string
+              description: |-
+                無聲標記特別字串
+
+                default: #pau#
+
+                TTS 在遇到摘要中的無聲標記特別字串，會短暫的停頓 0.5s (可用 TTS_PAUSE_DURATION 控制停頓時間)，此 marker 也可重複使用，重複幾次就停頓幾次。
+
+                無聲標記特別字串不會出現在字幕中，也不會在語音中出現，可用於希望放慢 TTS 時使用。
+
+                注意：這 config 適用於 custom alignment 和 rough_timeline 接口。透過一般的 news url 或結構化 content 的摘要 module 會把特別字串洗掉，無法保證摘要還會保留特別字串。
+
+                EX: 鸣人#pau#和佐助#pau##pau#在终结之谷
+                以上句子在唸完“鸣人” 之後，會短暫的停頓 0.5s，在唸完“佐助” 之後，會短暫的停頓 1s
+            Summarizer/TTS_PAUSE_DURATION:
+              type: string
+              description: |-
+                無聲停頓
+
+                default: 0.5
+
+                配置無聲標記特別字串短暫的停頓時間
+            Production/STYLE_THEME:
+              type: string
+              description: |-
+                風格主題設定
+
+                目前支持的只有 "general"
+                設定風格主題可以將開頭，人物誌等生成素材切換成不同的風格，會慢慢支持更多的風格。
+            AIService/TTS_SPEED:
+              type: number
+              description: 'TTS语音速度, 单位: 字/秒, 默认值: 5'
+      required:
+        - tts_per
+        - structured_data
   securitySchemes: {}
