@@ -1727,7 +1727,7 @@ components:
                 trend: downward
       title: ''
       properties:
-        '':
+        theme:
           type: string
           description: 模版主题名称，必须填写为"zs_zaobao"。
           enum:
@@ -1794,6 +1794,7 @@ components:
                   - percentage_change
                   - trend
       required:
+        - theme
         - template
         - duration
         - template_data
