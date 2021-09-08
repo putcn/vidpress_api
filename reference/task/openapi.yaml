@@ -1751,6 +1751,7 @@ components:
           description: 当前模版所需要的结构化数据。
           required:
             - news_category
+            - date
             - market_close_date
             - stock_info
           properties:
@@ -1758,6 +1759,10 @@ components:
               type: string
               description: 当前新闻的标签，不超过4个汉字。
               example: 股市收盘
+            date:
+              type: string
+              description: "早报日期。格式为： 年年-月月-日日 星期\n例如 21.04.17 Sun.\_"
+              example: 21.04.17 Sun.
             market_close_date:
               type: string
               description: 交易日日期，格式为：年年年年.月月.日日 例如：2021.04.06。
