@@ -761,6 +761,66 @@ paths:
                   description: 預估的字體大小
               required:
                 - text
+  '/task/{task_id}/template_video':
+    parameters:
+      - schema:
+          type: string
+        name: task_id
+        in: path
+        required: true
+        description: template vidpress task id
+    post:
+      summary: 上传模版视频的结构化数据资源
+      operationId: post-task-task_id-template_video
+      responses:
+        '200':
+          description: OK
+      description: |
+        提供模版化视频生成所需要的结构化数据。 结构化数据的构造为list of dictionary，每个dictonary对应制作一个模版视频片段所用到的参数，例：
+        ```
+        　[
+        　  {"theme": "zs_zaobao",
+        　   "template": "cover",
+        　   "duration": 5,
+        　   "template_data": {...}},
+        　   
+        　  {"theme": "zs_zaobao",
+        　   "template": "news",
+        　   "duration": 10,
+        　   "template_data": {...}},
+        　   
+        　   {"theme": "zs_zaobao",
+        　   "template": "stock_view",
+        　   "duration": 20,
+        　   "template_data": {...}}
+        　]
+        ```
+
+        **招行财经早报**
+
+        三类模版视频的参数输入规范：
+
+        1. [cover page](openapi.yaml/components/schemas/ZS_intro_page)
+        2. [news page](openapi.yaml/components/schemas/ZS_news_page)
+        3. [stock view page](openapi.yaml/components/schemas/ZS_stock_view_page)
+
+        注意：模版vidpress会按照结构化数据中每个模版数据在列表中的先后顺序去整合和播放最终的模版视频。
+
+        该接口的使用方式与/task/{task_id}/alignment与/task/{task_id}/rough_timeline的使用方式类似，需要先调用/task接口创建空的template vidpress任务，然后用返回的task_id去调用/task/{task_id}/template_video。
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Template_alignment'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+            examples:
+              example-1:
+                value: {}
+        description: ''
+      parameters: []
 components:
   schemas:
     Error:
@@ -1411,6 +1471,12 @@ components:
       title: ''
       x-internal: false
       properties:
+        theme:
+          type: string
+          enum:
+            - zs_zaobao
+          example: zs_zaobao
+          description: 模版主题名称，必须填写为"zs_zaobao"。
         template:
           type: string
           description: 早报封面页模版名称。
@@ -1516,6 +1582,7 @@ components:
                   example: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
                   description: logo链接。
       required:
+        - theme
         - template
         - duration
         - template_data
@@ -1541,6 +1608,12 @@ components:
                 url: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
       title: ''
       properties:
+        theme:
+          type: string
+          description: 模版主题名称，必须填写为"zs_zaobao"。
+          enum:
+            - zs_zaobao
+          example: zs_zaobao
         template:
           type: string
           enum:
@@ -1628,6 +1701,7 @@ components:
                   example: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
                   description: logo链接。
       required:
+        - theme
         - template
         - duration
         - template_data
@@ -1654,6 +1728,12 @@ components:
                 trend: downward
       title: ''
       properties:
+        theme:
+          type: string
+          description: 模版主题名称，必须填写为"zs_zaobao"。
+          enum:
+            - zs_zaobao
+          example: zs_zaobao
         template:
           type: string
           description: 早报股市信息页的模版名称。
@@ -1671,6 +1751,7 @@ components:
           description: 当前模版所需要的结构化数据。
           required:
             - news_category
+            - date
             - market_close_date
             - stock_info
           properties:
@@ -1678,6 +1759,10 @@ components:
               type: string
               description: 当前新闻的标签，不超过4个汉字。
               example: 股市收盘
+            date:
+              type: string
+              description: "早报日期。格式为： 年年-月月-日日 星期\n例如 21.04.17 Sun.\_"
+              example: 21.04.17 Sun.
             market_close_date:
               type: string
               description: 交易日日期，格式为：年年年年.月月.日日 例如：2021.04.06。
@@ -1715,7 +1800,26 @@ components:
                   - percentage_change
                   - trend
       required:
+        - theme
         - template
         - duration
         - template_data
+    Template_alignment:
+      title: Template_alignment
+      type: object
+      description: 模版视频的输入格式
+      properties:
+        template_alignment:
+          type: array
+          items:
+            type: object
+            properties:
+              theme:
+                type: string
+              template:
+                type: string
+              duration:
+                type: string
+              template_data:
+                type: object
   securitySchemes: {}
