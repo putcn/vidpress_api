@@ -1451,6 +1451,7 @@ components:
       x-examples:
         输入示例:
           value:
+            theme: zs_zaobao
             template: intro
             duration: 5
             template_data:
@@ -1592,6 +1593,7 @@ components:
       x-examples:
         example-1:
           value:
+            theme: zs_zaobao
             template: news
             duration: 10
             template_data:
@@ -1726,6 +1728,40 @@ components:
                 close_price: '2831.6'
                 percentage_change: 0.72%
                 trend: downward
+          value:
+            theme: zs_zaobao
+            template: stock_view
+            duration: 5
+            title: ''
+            news_content: ''
+            template_data:
+              news_category: 股市收盘
+              date: 21.09.10 Fri.
+              market_close_date: 2021.09.09
+              stock_info:
+                - name: 沪指
+                  close_price: '3482.97'
+                  percentage_change: 0.04%
+                  trend: upward
+                - name: 创业版指
+                  close_price: '2831.6'
+                  percentage_change: 0.72%
+                  trend: downward
+                - name: Ａ股指数
+                  close_price: '3753.95'
+                  percentage_change: 0.43%
+                  trend: downward
+                - name: 上证新兴
+                  close_price: '10595.75'
+                  percentage_change: 1.72%
+                  trend: upward
+                - name: 深证300
+                  close_price: '1845.74'
+                  percentage_change: 1.04%
+                  trend: upward
+              logo:
+                type: image
+                url: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
       title: ''
       properties:
         theme:
