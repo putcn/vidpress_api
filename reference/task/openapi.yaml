@@ -780,7 +780,7 @@ paths:
         ```
         　[
         　  {"theme": "zs_zaobao",
-        　   "template": "cover",
+        　   "template": "intro",
         　   "duration": 5,
         　   "template_data": {...}},
         　   
@@ -800,9 +800,9 @@ paths:
 
         三类模版视频的参数输入规范：
 
-        1. [cover page](openapi.yaml/components/schemas/ZS_intro_page)
-        2. [news page](openapi.yaml/components/schemas/ZS_news_page)
-        3. [stock view page](openapi.yaml/components/schemas/ZS_stock_view_page)
+        1. [intro page](https://rockstar.stoplight.io/docs/vidpress-api/c2NoOjE5OTM2NTE4-zs-intro-page)
+        2. [news page](https://rockstar.stoplight.io/docs/vidpress-api/c2NoOjE5OTM2NTE5-zs-news-page)
+        3. [stock view page](https://rockstar.stoplight.io/docs/vidpress-api/c2NoOjE5OTM2NTIw-zs-stock-view-page)
 
         注意：模版vidpress会按照结构化数据中每个模版数据在列表中的先后顺序去整合和播放最终的模版视频。
 
