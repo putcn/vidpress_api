@@ -1712,22 +1712,6 @@ components:
       type: object
       x-examples:
         example-1:
-          template: stock_view
-          duration: 10
-          title: ''
-          news_content: ''
-          template_data:
-            news_category: 股市收盘
-            market_close_date: 2021.04.06
-            stock_info:
-              - name: 沪指
-                close_price: '3482.97'
-                percentage_change: 0.04%
-                trend: upward
-              - name: 创业版指
-                close_price: '2831.6'
-                percentage_change: 0.72%
-                trend: downward
           value:
             theme: zs_zaobao
             template: stock_view
@@ -1790,6 +1774,7 @@ components:
             - date
             - market_close_date
             - stock_info
+            - logo
           properties:
             news_category:
               type: string
@@ -1835,6 +1820,24 @@ components:
                   - close_price
                   - percentage_change
                   - trend
+            logo:
+              type: object
+              description: 早报logo类型，可选类型为image和video。
+              required:
+                - type
+                - url
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - image
+                    - video
+                  example: image
+                  description: 早报logo类型，可选类型为image和video。
+                url:
+                  type: string
+                  example: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
+                  description: logo链接。
       required:
         - theme
         - template
