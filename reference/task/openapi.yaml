@@ -47,7 +47,7 @@ paths:
                 $ref: '#/components/schemas/Error'
         '509':
           description: Bandwidth Limit Exceeded (Apache)
-      description: |
+      description: |-
         创建一个视频生成任务. 配置中支持callback_url, 在任务有任何更新的时候request该url; 支持设定任务优先级, 3为普通优先级, 2为高优先级. 原则上支持1和0, 若非必要请勿占用. 
         创建视频任务支持不提供數據到news_url (EX: news_url="", field 是 required, 但可以empty), 这样会创建一个空任务, 请通过task upload接口上传所需media, 然后call alignment接口来对齐媒体和文字并生成视频
 
@@ -138,6 +138,15 @@ paths:
 
         {
         "Production/CUSTOM_BG_MUSIC_PATH":"https://www.example.com/bg.mp3",
+        }
+
+        财经类文章配置
+
+        一般URL转视频的任务，Vidpress会做自动根据URL的文本来分类，在分类为“财经”时，Vidpress会访问“财经”素材库，去获取更多财经相关的素材，文章类别是透过算法自动分析获得的，如果希望手动设置来强迫搜索财经可以用DEFAULT/VIDEO_CATEGORY来配置，目前支持的值有“财经”，“体育”，“娱乐”。
+        使用方法是在extra_config中,提供以下参数
+
+        {
+        "DEFAULT/VIDEO_CATEGORY": "财经"
         }
       requestBody:
         content:
@@ -1053,6 +1062,14 @@ components:
             AIService/TTS_SPEED:
               type: number
               description: 'TTS语音速度, 单位: 字/秒, 默认值: 5'
+            DEFAULT/VIDEO_CATEGORY:
+              type: string
+              description: |-
+                手动设置访问“财经”素材库
+
+                'default'：文章类别是透过算法自动分析获得
+
+                '财经'：会特别搜索财经类素材库
         source:
           type: array
           example: 'current-url, current-url-host, lib-vidpress, lib-renminribao, internet'
