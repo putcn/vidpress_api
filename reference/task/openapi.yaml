@@ -715,12 +715,19 @@ paths:
         PPT文件必须满足以下三个条件：（1）文件以.pptx结尾；（2）每一页的幻灯片必须添加备注；（3）文件大小不能超过50M；    
 
         该接口的使用方式与/task/{task_id}/alignment与/task/{task_id}/rough_timeline的使用方式类似，需要先调用/task接口创建空的vidpress任务，然后用返回的task_id去调用/task/{task_id}/ppt_alignment。创建空任务的响应时间和普通的创建时间没有区间，上传PPT文件的响应时间会受到PPT文件大小以及网速的影响。
+
+        可接受本地ppt文件路径或者ppt下载地址两种参数作为输入，正常请求返回201。如果两个参数都缺失或者两个参数都包含，请求会返回400。
       parameters:
         - schema:
             type: string
           in: query
           name: file
           description: 本地PPT文件路径
+        - schema:
+            type: string
+          in: query
+          name: ppt_url
+          description: PPT文件的公网下载地址
   /wordseg:
     get:
       summary: 字幕分句
@@ -763,6 +770,66 @@ paths:
                   description: 預估的字體大小
               required:
                 - text
+  '/task/{task_id}/template_video':
+    parameters:
+      - schema:
+          type: string
+        name: task_id
+        in: path
+        required: true
+        description: template vidpress task id
+    post:
+      summary: 上传模版视频的结构化数据资源
+      operationId: post-task-task_id-template_video
+      responses:
+        '200':
+          description: OK
+      description: |
+        提供模版化视频生成所需要的结构化数据。 结构化数据的构造为list of dictionary，每个dictonary对应制作一个模版视频片段所用到的参数，例：
+        ```
+        　[
+        　  {"theme": "zs_zaobao",
+        　   "template": "intro",
+        　   "duration": 5,
+        　   "template_data": {...}},
+        　   
+        　  {"theme": "zs_zaobao",
+        　   "template": "news",
+        　   "duration": 10,
+        　   "template_data": {...}},
+        　   
+        　   {"theme": "zs_zaobao",
+        　   "template": "stock_view",
+        　   "duration": 20,
+        　   "template_data": {...}}
+        　]
+        ```
+
+        **招行财经早报**
+
+        三类模版视频的参数输入规范：
+
+        1. [intro page](https://rockstar.stoplight.io/docs/vidpress-api/c2NoOjE5OTM2NTE4-zs-intro-page)
+        2. [news page](https://rockstar.stoplight.io/docs/vidpress-api/c2NoOjE5OTM2NTE5-zs-news-page)
+        3. [stock view page](https://rockstar.stoplight.io/docs/vidpress-api/c2NoOjE5OTM2NTIw-zs-stock-view-page)
+
+        注意：模版vidpress会按照结构化数据中每个模版数据在列表中的先后顺序去整合和播放最终的模版视频。
+
+        该接口的使用方式与/task/{task_id}/alignment与/task/{task_id}/rough_timeline的使用方式类似，需要先调用/task接口创建空的template vidpress任务，然后用返回的task_id去调用/task/{task_id}/template_video。
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Template_alignment'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+            examples:
+              example-1:
+                value: {}
+        description: ''
+      parameters: []
 components:
   schemas:
     Error:
@@ -1395,4 +1462,420 @@ components:
       required:
         - type
         - data
+    ZS_intro_page:
+      description: 招商银行财经早报封面页。
+      type: object
+      x-examples:
+        输入示例:
+          value:
+            theme: zs_zaobao
+            template: intro
+            duration: 5
+            template_data:
+              title: 见证历史！深市两版合并正式实施，超20万亿板块起航，市场影响几何？
+              date: 21.04.07 Wed.
+              media_center:
+                type: image
+                url: 'http://www.langxiaozhi.com.cn:7080/public/image/9bd48732c8af1a5709f5c4abe0b4f601.png'
+              media_left:
+                type: image
+                url: 'http://www.langxiaozhi.com.cn:7080/public/image/9bd48732c8af1a5709f5c4abe0b4f601.png'
+              media_right:
+                type: image
+                url: 'http://www.langxiaozhi.com.cn:7080/public/image/9bd48732c8af1a5709f5c4abe0b4f601.png'
+              logo:
+                type: image
+                url: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
+      title: ''
+      x-internal: false
+      properties:
+        theme:
+          type: string
+          enum:
+            - zs_zaobao
+          example: zs_zaobao
+          description: 模版主题名称，必须填写为"zs_zaobao"。
+        template:
+          type: string
+          description: 早报封面页模版名称。
+          enum:
+            - intro
+          example: intro
+        duration:
+          type: number
+          description: 模版视频时长。
+          example: 5
+        template_data:
+          type: object
+          description: 当前模版所需要的结构化数据。
+          required:
+            - title
+            - date
+            - media_center
+            - media_left
+            - media_right
+            - logo
+          properties:
+            title:
+              type: string
+              description: 早报封面页的标题文案。最多不能超过34个汉字（包括标点）的长度，超出部分会被自动截断。
+              maxLength: 34
+              minLength: 0
+            date:
+              type: string
+              description: |-
+                早报日期。格式为： 年年-月月-日日 星期
+                例如 21.04.17 Sun.
+              example: 21.04.17 Sun.
+            media_center:
+              type: object
+              description: '早报封面页的主图，图片展示尺寸为5:4。'
+              required:
+                - type
+                - url
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - image
+                    - video
+                  example: image
+                  description: 媒体素材类型，可选类型为image和video。
+                url:
+                  type: string
+                  example: 'http://www.langxiaozhi.com.cn:7080/public/image/9bd48732c8af1a5709f5c4abe0b4f601.png'
+                  description: 媒体素材链接。
+            media_left:
+              type: object
+              description: '早报封面页的左侧附图，图片展示尺寸为5:4。'
+              required:
+                - type
+                - url
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - image
+                    - video
+                  example: image
+                  description: 媒体素材类型，可选类型为image和video。
+                url:
+                  type: string
+                  example: 'http://www.langxiaozhi.com.cn:7080/public/image/9bd48732c8af1a5709f5c4abe0b4f601.png'
+                  description: 媒体素材链接。
+            media_right:
+              type: object
+              description: '早报封面页的右侧附图，图片展示尺寸为5:4。'
+              required:
+                - type
+                - url
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - image
+                    - video
+                  example: image
+                  description: 媒体素材类型，可选类型为image和video。
+                url:
+                  type: string
+                  example: 'http://www.langxiaozhi.com.cn:7080/public/image/9bd48732c8af1a5709f5c4abe0b4f601.png'
+                  description: 媒体素材链接。
+            logo:
+              type: object
+              description: 早报的Logo图案。图形大小需为300x60。
+              required:
+                - type
+                - url
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - image
+                    - video
+                  example: image
+                  description: 早报logo类型，可选类型为image和video。
+                url:
+                  type: string
+                  example: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
+                  description: logo链接。
+      required:
+        - theme
+        - template
+        - duration
+        - template_data
+    ZS_news_page:
+      description: 招商银行财经早报新闻页。
+      type: object
+      x-examples:
+        example-1:
+          value:
+            theme: zs_zaobao
+            template: news
+            duration: 10
+            template_data:
+              title: 一度暴涨18% 拼多多最新财报出炉！
+              news_category: 重磅新闻
+              date: 21.04.17 Sun.
+              text: 北京时间8月24日晚间，拼多多发布了2021年第二季度财报，二季度营收230亿元、同比增长89%，不及市场预期的267亿。\n在运营利润、净利润表现上，拼多多当季均扭亏为盈。
+              media:
+                - type: image
+                  url: 'http://n.sinaimg.cn/tech/transform/118/w550h368/20210806/eb2a-e5134322be1faf2b36a896b14351b25e.png'
+                  reusable: true
+              logo:
+                type: image
+                url: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
+      title: ''
+      properties:
+        theme:
+          type: string
+          description: 模版主题名称，必须填写为"zs_zaobao"。
+          enum:
+            - zs_zaobao
+          example: zs_zaobao
+        template:
+          type: string
+          enum:
+            - news
+          example: news
+          description: 早报新闻页的模版名称。
+        duration:
+          type: number
+          description: |-
+            模版视频时长。
+            注意： 如果模版中包括TTS，且TTS时长大于设定的模版视频时长，则会使用TTS时长作为模版视频的总时长。
+          exclusiveMinimum: false
+          example: 10
+        template_data:
+          type: object
+          description: 当前模版所需要的结构化数据。
+          required:
+            - title
+            - news_category
+            - date
+            - text
+            - media
+            - logo
+          properties:
+            title:
+              type: string
+              description: 早报新闻页的标题。不得超过16个汉字（包括标点）的长度，超出部分会被自动截断。
+              example: 一度暴涨18% 拼多多最新财报出炉！
+              maxLength: 16
+              minLength: 0
+            news_category:
+              type: string
+              description: 当前新闻的标签，不超过4个汉字。
+              example: 重磅新闻
+            date:
+              type: string
+              description: "早报日期。格式为： 年年-月月-日日 星期\n例如 21.04.17 Sun.\_\_"
+              example: 21.04.17 Sun.
+            text:
+              type: string
+              description: 新闻正文，无字数限制。段落间可用"\n"符做分隔，被分隔出来的段落会在单独在新的页面中展示。如果段落字数超过了页面可展示的长度，则会自动做翻页处理，在新的页面中展示剩余内容。
+              example: 北京时间8月24日晚间，拼多多发布了2021年第二季度财报，二季度营收230亿元、同比增长89%，不及市场预期的267亿。\n在运营利润、净利润表现上，拼多多当季均扭亏为盈。
+            media:
+              type: array
+              uniqueItems: true
+              minItems: 1
+              description: 提供模版内嵌视频中所使用的媒体素材。
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - image
+                      - video
+                    example: image
+                    description: 媒体素材类型，可选类型为image和video。
+                  url:
+                    type: string
+                    example: 'http://n.sinaimg.cn/tech/transform/118/w550h368/20210806/eb2a-e5134322be1faf2b36a896b14351b25e.png'
+                    description: 媒体素材链接。
+                  reusable:
+                    type: boolean
+                    description: 是否可以在视频中循环播放当前素材。
+                required:
+                  - type
+                  - url
+                  - reusable
+            logo:
+              type: object
+              description: 早报logo类型，可选类型为image和video。
+              required:
+                - type
+                - url
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - image
+                    - video
+                  example: image
+                  description: 早报logo类型，可选类型为image和video。
+                url:
+                  type: string
+                  example: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
+                  description: logo链接。
+      required:
+        - theme
+        - template
+        - duration
+        - template_data
+    ZS_stock_view_page:
+      description: 招商银行财经早报股市信息页。
+      type: object
+      x-examples:
+        example-1:
+          value:
+            theme: zs_zaobao
+            template: stock_view
+            duration: 5
+            title: ''
+            news_content: ''
+            template_data:
+              news_category: 股市收盘
+              date: 21.09.10 Fri.
+              market_close_date: 2021.09.09
+              stock_info:
+                - name: 沪指
+                  close_price: '3482.97'
+                  percentage_change: 0.04%
+                  trend: upward
+                - name: 创业版指
+                  close_price: '2831.6'
+                  percentage_change: 0.72%
+                  trend: downward
+                - name: Ａ股指数
+                  close_price: '3753.95'
+                  percentage_change: 0.43%
+                  trend: downward
+                - name: 上证新兴
+                  close_price: '10595.75'
+                  percentage_change: 1.72%
+                  trend: upward
+                - name: 深证300
+                  close_price: '1845.74'
+                  percentage_change: 1.04%
+                  trend: upward
+              logo:
+                type: image
+                url: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
+      title: ''
+      properties:
+        theme:
+          type: string
+          description: 模版主题名称，必须填写为"zs_zaobao"。
+          enum:
+            - zs_zaobao
+          example: zs_zaobao
+        template:
+          type: string
+          description: 早报股市信息页的模版名称。
+          enum:
+            - stock_view
+          example: stock_view
+        duration:
+          type: number
+          description: |-
+            模版视频时长。
+            注意： 每条股票信息的展示时间为3秒。若用户提供的视频时长大于所有股票的总展示时间，则会延长股票的展示时间。反之，若用户提供的视频时长小于所有股票的总展示时间，则会将视频时长顺延至所有股票信息展示完毕的时间。
+          example: 10
+        template_data:
+          type: object
+          description: 当前模版所需要的结构化数据。
+          required:
+            - news_category
+            - date
+            - market_close_date
+            - stock_info
+            - logo
+          properties:
+            news_category:
+              type: string
+              description: 当前新闻的标签，不超过4个汉字。
+              example: 股市收盘
+            date:
+              type: string
+              description: "早报日期。格式为： 年年-月月-日日 星期\n例如 21.04.17 Sun.\_"
+              example: 21.04.17 Sun.
+            market_close_date:
+              type: string
+              description: 交易日日期，格式为：年年年年.月月.日日 例如：2021.04.06。
+              example: 2021.04.06
+            stock_info:
+              type: array
+              uniqueItems: true
+              minItems: 1
+              description: 股市信息，可提供任意数量的数据。
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 股票名称。
+                    example: 沪指
+                  close_price:
+                    type: string
+                    description: 收盘价。
+                    example: '3482.97'
+                  percentage_change:
+                    type: string
+                    description: 与前一个交易日收盘价相比的变化百分比。
+                    example: 0.04%
+                  trend:
+                    type: string
+                    description: 价格变化趋势。
+                    enum:
+                      - upward
+                      - downward
+                    example: upward
+                required:
+                  - name
+                  - close_price
+                  - percentage_change
+                  - trend
+            logo:
+              type: object
+              description: 早报logo类型，可选类型为image和video。
+              required:
+                - type
+                - url
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - image
+                    - video
+                  example: image
+                  description: 早报logo类型，可选类型为image和video。
+                url:
+                  type: string
+                  example: 'http://user-tool:8080/media/gui_topics/custom_media/logo.png'
+                  description: logo链接。
+      required:
+        - theme
+        - template
+        - duration
+        - template_data
+    Template_alignment:
+      title: Template_alignment
+      type: object
+      description: 模版视频的输入格式
+      properties:
+        template_alignment:
+          type: array
+          items:
+            type: object
+            properties:
+              theme:
+                type: string
+              template:
+                type: string
+              duration:
+                type: string
+              template_data:
+                type: object
   securitySchemes: {}
