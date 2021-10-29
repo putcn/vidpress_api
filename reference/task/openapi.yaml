@@ -47,7 +47,7 @@ paths:
                 $ref: '#/components/schemas/Error'
         '509':
           description: Bandwidth Limit Exceeded (Apache)
-      description: |
+      description: |-
         创建一个视频生成任务. 配置中支持callback_url, 在任务有任何更新的时候request该url; 支持设定任务优先级, 3为普通优先级, 2为高优先级. 原则上支持1和0, 若非必要请勿占用. 
         创建视频任务支持不提供數據到news_url (EX: news_url="", field 是 required, 但可以empty), 这样会创建一个空任务, 请通过task upload接口上传所需media, 然后call alignment接口来对齐媒体和文字并生成视频
 
@@ -164,6 +164,28 @@ paths:
 
         {
         'Production/DISABLE_ZOOM_STYLE' = True
+        }
+
+        特殊加速配置
+
+        在大部分情况下，图片转成为scrool or zoom视频会消耗大量时间，如果用户愿意牺牲部分转视频的效果，可以配置EFFECT_DURATION_TYPE来加速视频制作过程，
+
+        EFFECT_DURATION_TYPE的可用配置为以下
+
+        “full”默认配置，图片转成为scroll or zoom视频时，是会从头scroll or zoom到尾，需要较多时间生成
+        “lite”图片转成为scroll or zoom视频时，只有前10秒会是有动态效果，较少时间生成。
+        “none”只使用静态图，不生成视频，能较快生成。
+
+        使用lite配置时，用户也可以透过ZOOM_SCROLL_EFFECT_DURATION来配置前几秒能有动态效果，default是10s
+
+        使用方法是在extra_config中，提供以下参数
+        extra_config = {
+          'Production/EFFECT_DURATION_TYPE': 'lite',
+          'Production/ZOOM_SCROLL_EFFECT_DURATION': 8,
+        }
+        OR
+        extra_config = {
+          'Production/EFFECT_DURATION_TYPE': 'none',
         }
       requestBody:
         content:
